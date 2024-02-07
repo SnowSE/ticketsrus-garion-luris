@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using TicketsRUs.Classlib.Data;
 
 namespace TicketsRUs.WebApp.Data;
 
@@ -24,7 +25,7 @@ public partial class PostgresContext : DbContext
     public virtual DbSet<UserTicket> UserTickets { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Name=ConnectionStrings:db");
+        => optionsBuilder.UseNpgsql("Name=db");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

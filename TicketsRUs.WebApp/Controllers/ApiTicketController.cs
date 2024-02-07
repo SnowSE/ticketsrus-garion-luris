@@ -1,45 +1,53 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TicketsRUs.WebApp.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TicketsRUs.Classlib.Data;
+using TicketsRUs.Classlib.Services;
 
-namespace TicketsRUs.WebApp.Controllers;
+namespace TicketsRUs.Classlib.Controllers;
 
-public class ApiTicketController : ITicketController
+[Route("[controller]")]
+[ApiController]
+public class ApiTicketController : ControllerBase
 {
-    PostgresContext _context = new();
+    ITicketService _service;
+    public ApiTicketController(ITicketService service)
+    {
+            _service = service;
+    }
 
+    [HttpGet("events")]
     public async Task<IEnumerable<AvailableEvent>> GetAllAvailableEvents()
     {
-        return await _context.AvailableEvents.ToListAsync();
+        return await _service.GetAllAvailableEvents();
     }
 
+    [HttpGet("clients")]
     public async Task<IEnumerable<Client>> GetAllClients()
     {
-        return await _context.Clients.ToListAsync();
+        return await _service.GetAllClients();
     }
 
+    [HttpGet("tickets")]
     public async Task<IEnumerable<Ticket>> GetAllTickets()
     {
-        return await _context.Tickets.ToListAsync();
+        return await _service.GetAllTickets();
     }
 
+    [HttpGet("event/{id}")]
     public async Task<AvailableEvent> GetAvailableEvent(int id)
     {
-        return await _context.AvailableEvents
-            .Where(e => e.Id == id)
-            .FirstOrDefaultAsync();
+        return await _service.GetAvailableEvent(id);
     }
 
+    [HttpGet("client/{id}")]
     public async Task<Client> GetClient(string email)
     {
-        return await _context.Clients
-            .Where(e => e.Email == email)
-            .FirstOrDefaultAsync();
+        return await _service.GetClient(email);
     }
 
+    [HttpGet("ticket/{id}")]
     public async Task<Ticket> GetTicket(int id)
     {
-        return await _context.Tickets
-            .Where(e => e.Id == id)
-            .FirstOrDefaultAsync();
+        return await _service.GetTicket(id);
     }
 }
