@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using TicketsRUs.Classlib.Data;
-using TicketsRUs.Classlib.Services;
+using TicketsRUs.ClassLib.Data;
+using TicketsRUs.ClassLib.Services;
 using TicketsRUs.WebApp.Components;
 using Microsoft.Extensions.Configuration;
 using TicketsRUs.WebApp.Data;

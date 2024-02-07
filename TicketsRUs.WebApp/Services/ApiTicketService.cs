@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TicketsRUs.Classlib.Data;
+using TicketsRUs.ClassLib.Data;
 using TicketsRUs.WebApp.Data;
 
-namespace TicketsRUs.Classlib.Services;
+namespace TicketsRUs.ClassLib.Services;
 
 public class ApiTicketService(IDbContextFactory<PostgresContext> factory) : ITicketService
 {

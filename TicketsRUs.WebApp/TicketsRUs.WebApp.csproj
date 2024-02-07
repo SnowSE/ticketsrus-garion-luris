@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TickersRUs\TicketsRUs.ClassLib.csproj" />
+    <ProjectReference Include="..\TicketsRUs.ClassLib\TicketsRUs.ClassLib.csproj" />
   </ItemGroup>
 
 </Project>

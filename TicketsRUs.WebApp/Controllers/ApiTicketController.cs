@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TicketsRUs.Classlib.Data;
-using TicketsRUs.Classlib.Services;
+using TicketsRUs.ClassLib.Data;
+using TicketsRUs.ClassLib.Services;
 
-namespace TicketsRUs.Classlib.Controllers;
+namespace TicketsRUs.ClassLib.Controllers;
 
 [Route("[controller]")]
 [ApiController]

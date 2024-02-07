@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TicketsRUs.Classlib.Data;
+namespace TicketsRUs.ClassLib.Data;
 
 public partial class UserTicket
 {

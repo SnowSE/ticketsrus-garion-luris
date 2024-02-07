@@ -1,6 +1,6 @@
-﻿using TicketsRUs.Classlib.Data;
+﻿using TicketsRUs.ClassLib.Data;
 
-namespace TicketsRUs.Classlib.Services;
+namespace TicketsRUs.ClassLib.Services;
 
 public interface ITicketService
 {
