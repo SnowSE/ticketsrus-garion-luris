@@ -1,10 +1,13 @@
 using TicketsRUs.WebApp.Components;
+using TicketsRUs.WebApp.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddSingleton<ITicketController, ApiTicketController>();
 
 var app = builder.Build();
 
