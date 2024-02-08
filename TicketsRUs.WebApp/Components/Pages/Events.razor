@@ -1,0 +1,41 @@
+﻿@page "/events"
+@using TicketsRUs.ClassLib.Controllers
+@using TicketsRUs.ClassLib.Data
+@using TicketsRUs.ClassLib.Services
+@rendermode InteractiveServer
+@inject ITicketService service
+
+<PageTitle>Events</PageTitle>
+
+<h1>Events</h1>
+
+@foreach (AvailableEvent e in events)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">StartTime</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">@e.Id</th>
+                <td>@e.StartTime</td>
+                <td><button class="btn btn-outline-success">Buy Ticket</button></td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+@code {
+    ApiTicketController controller;
+    List<AvailableEvent> events = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        controller = new(service);
+        events = (await controller.GetAllAvailableEvents()).ToList();
+    }
+}
