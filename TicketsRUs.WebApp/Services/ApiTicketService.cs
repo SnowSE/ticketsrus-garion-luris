@@ -47,4 +47,14 @@ public class ApiTicketService(IDbContextFactory<PostgresContext> factory) : ITic
             .Where(e => e.Id == id)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<IEnumerable<UserTicket>> GetUserTicketAll()
+    {
+        var context = factory.CreateDbContext();
+        return await context.UserTickets
+            .Include(t => t.Ticket)
+                .ThenInclude(e => e.Event)
+            .Include(c => c.Client)
+            .ToListAsync();
+    }
 }

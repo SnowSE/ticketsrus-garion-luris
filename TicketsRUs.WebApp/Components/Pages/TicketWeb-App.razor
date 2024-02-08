@@ -1,0 +1,41 @@
+﻿@page "/ticket"
+@inject ITicketService service
+@rendermode InteractiveServer
+
+<PageTitle>Tickets</PageTitle>
+
+<h3>TicketWeb_App</h3>
+@foreach (UserTicket t in usertickets)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">EventId</th>
+                <th scope="col">Seat</th>
+                <th scope="col">Start-Time</th>
+                <th scope="col">Email</th>
+                <th scope="col">Scanned</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">@t.Ticket.EventId</th>
+                <th scope="row">@t.Ticket.Seat</th>
+                <th scope="row">@t.Ticket.Event.StartTime</th>
+                <th scope="row">@t.Client.Email</th>
+                <th scope="row">@t.Ticket.Scanned</th>
+            </tr>
+
+        </tbody>
+    </table>
+}
+@code {
+    List<UserTicket> usertickets = new();
+    List<AvailableEvent> events = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        usertickets = (await service.GetUserTicketAll()).ToList();
+        events = (await service.GetAllAvailableEvents()).ToList();
+    }
+}

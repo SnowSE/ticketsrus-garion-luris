@@ -10,4 +10,5 @@ public interface ITicketService
     Task<Client> GetClient(string email);
     Task<IEnumerable<Ticket>> GetAllTickets();
     Task<Ticket> GetTicket(int id);
+    Task<IEnumerable<UserTicket>> GetUserTicketAll();
 }
