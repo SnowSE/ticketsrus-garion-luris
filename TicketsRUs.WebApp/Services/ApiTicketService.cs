@@ -6,6 +6,46 @@ namespace TicketsRUs.ClassLib.Services;
 
 public class ApiTicketService(IDbContextFactory<PostgresContext> factory) : ITicketService
 {
+    public async Task CreateClient(string email)
+    {
+        var context = factory.CreateDbContext();
+
+        context.Add(new Client() { 
+            Id = await context.Clients.CountAsync() + 1,
+            Email = email 
+        });
+        await context.SaveChangesAsync();
+    }
+
+    public async Task CreateTicket(string email, int event_id)
+    {
+        var context = factory.CreateDbContext();
+
+        var client = await context.Clients
+            .Where(c => c.Email == email)
+            .FirstOrDefaultAsync();
+
+        Ticket ticket = new Ticket()
+        {
+            Id = await context.Tickets.CountAsync() + 1,
+            EventId = event_id,
+            Scanned = false,
+            Seat = $"A{await context.Tickets.Where(t => t.EventId == event_id).CountAsync() + 1}"
+        };
+
+        context.Tickets.Add(ticket);
+        await context.SaveChangesAsync();
+
+        UserTicket userTicket = new UserTicket()
+        {
+            Id = await context.UserTickets.CountAsync() + 1,
+            TicketId = ticket.Id,
+            ClientId = client.Id
+        };
+        context.UserTickets.Add(userTicket);
+        await context.SaveChangesAsync();
+    }
+
     public async Task<IEnumerable<AvailableEvent>> GetAllAvailableEvents()
     {
         var context = factory.CreateDbContext();

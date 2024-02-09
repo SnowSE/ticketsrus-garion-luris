@@ -14,7 +14,13 @@
     }
     else
     {
-        <p class="p-3 mb-2 bg-success text-white">Loaded event @Event_Id</p>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" placeholder="Enter email" @bind="email">
+            <small id="emailHelp" class="form-text text-muted">For Event: @Event_Id</small>
+        </div>
+
+        <button class="p-3 mb-2 btn btn-success" @onclick="Purchase">Purchase Ticket </button>
     }
 }
 
@@ -23,14 +29,27 @@
     <p class="p-3 mb-2 bg-danger text-white">Error</p>
 }
 
+@if (invalidEmail)
+{
+    <p class="p-3 mb-2 bg-danger text-white">Invalid Email</p>
+}
+
+@if (success)
+{
+    <p class="p-3 mb-2 bg-success text-white">Successfully purchased ticket for @Event_Id</p>
+}
+
 @code {
     [Parameter]
     public string Event_Id { get; set; }
+    string email = "";
 
     ApiTicketController controller;
     AvailableEvent? selected_event = null;
     bool dataIsLoaded = false;
     bool isError = false;
+    bool success = false;
+    bool invalidEmail = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -47,5 +66,41 @@
         controller = new(service);
         selected_event = await controller.GetAvailableEvent(Convert.ToInt32(Event_Id));
         dataIsLoaded = true;
+    }
+
+    async void Purchase()
+    {
+        success = false;
+        isError = false;
+
+        if (!IsValidEmail())
+        {
+            invalidEmail = true;
+            StateHasChanged();
+            return;
+        }
+
+        await CheckIfClientExists();
+
+        controller.CreateTicket(email, Convert.ToInt32(Event_Id));
+
+        email = "";
+        success = true;
+        StateHasChanged();
+    }
+
+    private bool IsValidEmail()
+    {
+        return (email.Contains("@") && email.Contains("."));
+    }
+
+    private async Task<bool> CheckIfClientExists()
+    {
+        if (await controller.GetClient(email) == null)
+        {
+            controller.CreateClient(email);    
+        }
+
+        return true;
     }
 }

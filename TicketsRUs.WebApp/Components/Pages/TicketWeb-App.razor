@@ -5,19 +5,19 @@
 <PageTitle>Tickets</PageTitle>
 
 <h3>TicketWeb_App</h3>
-@foreach (UserTicket t in usertickets)
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">EventId</th>
-                <th scope="col">Seat</th>
-                <th scope="col">Start-Time</th>
-                <th scope="col">Email</th>
-                <th scope="col">Scanned</th>
-            </tr>
-        </thead>
-        <tbody>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">EventId</th>
+            <th scope="col">Seat</th>
+            <th scope="col">Start-Time</th>
+            <th scope="col">Email</th>
+            <th scope="col">Scanned</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (UserTicket t in usertickets)
+        {
             <tr>
                 <th scope="row">@t.Ticket.EventId</th>
                 <th scope="row">@t.Ticket.Seat</th>
@@ -25,10 +25,10 @@
                 <th scope="row">@t.Client.Email</th>
                 <th scope="row">@t.Ticket.Scanned</th>
             </tr>
+        }
 
-        </tbody>
-    </table>
-}
+    </tbody>
+</table>
 @code {
     List<UserTicket> usertickets = new();
     List<AvailableEvent> events = new();
