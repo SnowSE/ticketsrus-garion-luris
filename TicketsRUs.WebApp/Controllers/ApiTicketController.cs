@@ -49,4 +49,16 @@ public class ApiTicketController : ControllerBase
     {
         return await _service.GetTicket(id);
     }
+
+    [HttpPost("purchase")]
+    public async void CreateTicket(string email, int event_id) 
+    {
+        await _service.CreateTicket(email, event_id);
+    }
+
+    [HttpPost("client")]
+    public async void CreateClient(string email)
+    {
+        await _service.CreateClient(email);
+    }
 }

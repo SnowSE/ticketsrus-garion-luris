@@ -70,6 +70,13 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="ZXing.Net.Maui.Controls" Version="0.4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <MauiXaml Update="CameraPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
     </ItemGroup>
 
 </Project>
