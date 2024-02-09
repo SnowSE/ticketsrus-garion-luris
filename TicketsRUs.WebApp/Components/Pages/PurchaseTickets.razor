@@ -1,0 +1,51 @@
+﻿@page "/purchase/{Event_Id}"
+@inject ITicketService service
+@rendermode InteractiveServer
+
+<PageTitle>Events</PageTitle>
+
+<h1>Events</h1>
+
+@if (dataIsLoaded)
+{
+    @if (selected_event == null)
+    {
+        <p class="p-3 mb-2 bg-danger text-white">Selected event does not exist</p>
+    }
+    else
+    {
+        <p class="p-3 mb-2 bg-success text-white">Loaded event @Event_Id</p>
+    }
+}
+
+@if (isError)
+{
+    <p class="p-3 mb-2 bg-danger text-white">Error</p>
+}
+
+@code {
+    [Parameter]
+    public string Event_Id { get; set; }
+
+    ApiTicketController controller;
+    AvailableEvent? selected_event = null;
+    bool dataIsLoaded = false;
+    bool isError = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Convert.ToInt32(Event_Id);
+        }
+        catch (Exception e)
+        {
+            isError = true;
+            return;
+        }
+
+        controller = new(service);
+        selected_event = await controller.GetAvailableEvent(Convert.ToInt32(Event_Id));
+        dataIsLoaded = true;
+    }
+}

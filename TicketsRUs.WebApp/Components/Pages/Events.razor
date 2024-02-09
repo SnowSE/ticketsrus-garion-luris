@@ -1,9 +1,7 @@
 ﻿@page "/events"
-@using TicketsRUs.ClassLib.Controllers
-@using TicketsRUs.ClassLib.Data
-@using TicketsRUs.ClassLib.Services
-@rendermode InteractiveServer
 @inject ITicketService service
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
 
 <PageTitle>Events</PageTitle>
 
@@ -23,7 +21,7 @@
             <tr>
                 <th scope="row">@e.Id</th>
                 <td>@e.StartTime</td>
-                <td><button class="btn btn-outline-success">Buy Ticket</button></td>
+                <td><button class="btn btn-success" @onclick="() => { BuyTicket(e.Id); }">Buy Ticket</button></td>
             </tr>
         </tbody>
     </table>
@@ -37,5 +35,10 @@
     {
         controller = new(service);
         events = (await controller.GetAllAvailableEvents()).ToList();
+    }
+
+    public void BuyTicket(int id)
+    {
+        Navigation.NavigateTo($"purchase/{id}");
     }
 }
