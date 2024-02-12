@@ -9,5 +9,7 @@ public partial class AvailableEvent
 
     public DateTime? StartTime { get; set; }
 
+    public string? Name { get; set; }
+
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }

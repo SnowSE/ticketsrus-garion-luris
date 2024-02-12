@@ -11,7 +11,7 @@ public class ApiTicketController : ControllerBase
     ITicketService _service;
     public ApiTicketController(ITicketService service)
     {
-            _service = service;
+        _service = service;
     }
 
     [HttpGet("events")]

@@ -80,7 +80,7 @@
             return;
         }
 
-        await CheckIfClientExists();
+        await CreateClientIfNotExists();
 
         controller.CreateTicket(email, Convert.ToInt32(Event_Id));
 
@@ -94,7 +94,7 @@
         return (email.Contains("@") && email.Contains("."));
     }
 
-    private async Task<bool> CheckIfClientExists()
+    private async Task<bool> CreateClientIfNotExists()
     {
         if (await controller.GetClient(email) == null)
         {

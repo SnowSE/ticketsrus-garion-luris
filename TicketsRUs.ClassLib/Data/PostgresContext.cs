@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using TicketsRUs.ClassLib.Data;
 
-namespace TicketsRUs.WebApp.Data;
+namespace TicketsRUs.ClassLib.Data;
 
 public partial class PostgresContext : DbContext
 {
@@ -42,6 +42,9 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .HasColumnName("name");
             entity.Property(e => e.StartTime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("start_time");
@@ -57,7 +60,7 @@ public partial class PostgresContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Email)
-                .HasMaxLength(64)
+                .HasMaxLength(50)
                 .HasColumnName("email");
         });
 
@@ -71,6 +74,9 @@ public partial class PostgresContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.EventId).HasColumnName("event_id");
+            entity.Property(e => e.Identifier)
+                .HasMaxLength(100)
+                .HasColumnName("identifier");
             entity.Property(e => e.Scanned).HasColumnName("scanned");
             entity.Property(e => e.Seat)
                 .HasMaxLength(4)
@@ -78,7 +84,7 @@ public partial class PostgresContext : DbContext
 
             entity.HasOne(d => d.Event).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.EventId)
-                .HasConstraintName("event_id");
+                .HasConstraintName("ticket_event_id_fkey");
         });
 
         modelBuilder.Entity<UserTicket>(entity =>

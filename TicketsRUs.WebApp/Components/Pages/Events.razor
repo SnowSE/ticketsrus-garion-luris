@@ -7,25 +7,27 @@
 
 <h1>Events</h1>
 
-@foreach (AvailableEvent e in events)
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">StartTime</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">StartTime</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (AvailableEvent e in events)
+        {
             <tr>
                 <th scope="row">@e.Id</th>
+                <td>@e.Name</td>
                 <td>@e.StartTime</td>
                 <td><button class="btn btn-success" @onclick="() => { BuyTicket(e.Id); }">Buy Ticket</button></td>
             </tr>
-        </tbody>
-    </table>
-}
+        }
+    </tbody>
+</table>
 
 @code {
     ApiTicketController controller;

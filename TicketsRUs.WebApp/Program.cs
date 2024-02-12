@@ -1,9 +1,7 @@
-using Microsoft.EntityFrameworkCore;
 using TicketsRUs.ClassLib.Data;
 using TicketsRUs.ClassLib.Services;
 using TicketsRUs.WebApp.Components;
-using Microsoft.Extensions.Configuration;
-using TicketsRUs.WebApp.Data;
+using TicketsRUs.ClassLib.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

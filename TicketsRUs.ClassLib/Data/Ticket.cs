@@ -7,11 +7,13 @@ public partial class Ticket
 {
     public int Id { get; set; }
 
+    public int? EventId { get; set; }
+
     public string? Seat { get; set; }
 
     public bool? Scanned { get; set; }
 
-    public int? EventId { get; set; }
+    public string? Identifier { get; set; }
 
     public virtual AvailableEvent? Event { get; set; }
 
