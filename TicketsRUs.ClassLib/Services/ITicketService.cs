@@ -13,4 +13,5 @@ public interface ITicketService
     Task<IEnumerable<UserTicket>> GetUserTicketAll();
     Task CreateTicket(string email, int event_id);
     Task CreateClient(string email);
+    Task UpdateTicket(Ticket t);
 }

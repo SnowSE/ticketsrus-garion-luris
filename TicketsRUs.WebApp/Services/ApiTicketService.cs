@@ -97,4 +97,12 @@ public class ApiTicketService(IDbContextFactory<PostgresContext> factory) : ITic
             .Include(c => c.Client)
             .ToListAsync();
     }
+
+    public async Task UpdateTicket(Ticket t)
+    {
+        var context = factory.CreateDbContext();
+        context.Update(t);
+
+        await context.SaveChangesAsync();
+    }
 }

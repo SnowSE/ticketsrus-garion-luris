@@ -1,7 +1,39 @@
 ﻿@page "/"
+@using QRCoder
+@using System.Drawing
+@using System.Drawing.Imaging
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+@if (dataLoaded)
+{
+    <img src="data:image;base64,@System.Convert.ToBase64String(qrCodeArray)" />
+}
+
+
+@code {
+    byte[] qrCodeArray;
+    bool dataLoaded = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
+        QRCode qrCode = new QRCode(qrCodeData);
+        Bitmap qrCodeImage = qrCode.GetGraphic(20);
+
+        using (MemoryStream stream = new MemoryStream())
+        {
+            qrCodeImage.Save(stream, ImageFormat.Png);
+            qrCodeArray = stream.ToArray();
+        }
+
+        dataLoaded = true;
+        StateHasChanged();
+    }
+}

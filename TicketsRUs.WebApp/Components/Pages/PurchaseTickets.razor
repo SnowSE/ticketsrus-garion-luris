@@ -2,9 +2,9 @@
 @inject ITicketService service
 @rendermode InteractiveServer
 
-<PageTitle>Events</PageTitle>
+<PageTitle>Purchase</PageTitle>
 
-<h1>Events</h1>
+<h1>Purchase Ticket</h1>
 
 @if (dataIsLoaded)
 {
@@ -15,7 +15,6 @@
     else
     {
         <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
             <input type="email" class="form-control" placeholder="Enter email" @bind="email">
             <small id="emailHelp" class="form-text text-muted">For Event: @Event_Id</small>
         </div>
@@ -42,10 +41,10 @@
 @code {
     [Parameter]
     public string Event_Id { get; set; }
-    string email = "";
 
     ApiTicketController controller;
     AvailableEvent? selected_event = null;
+    string email = "";
     bool dataIsLoaded = false;
     bool isError = false;
     bool success = false;
@@ -72,6 +71,7 @@
     {
         success = false;
         isError = false;
+        invalidEmail = false;
 
         if (!IsValidEmail())
         {

@@ -61,4 +61,10 @@ public class ApiTicketController : ControllerBase
     {
         await _service.CreateClient(email);
     }
+
+    [HttpPost("ticket")]
+    public async void UpdateTicket(Ticket t)
+    {
+        await _service.UpdateTicket(t);
+    }
 }
