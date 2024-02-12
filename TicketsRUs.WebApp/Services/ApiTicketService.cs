@@ -29,7 +29,10 @@ public class ApiTicketService(IDbContextFactory<PostgresContext> factory) : ITic
             Id = await context.Tickets.CountAsync() + 1,
             EventId = event_id,
             Scanned = false,
-            Seat = $"A{await context.Tickets.Where(t => t.EventId == event_id).CountAsync() + 1}"
+            Seat = $"A{await context.Tickets.Where(t => t.EventId == event_id).CountAsync() + 1}",
+            Identifier = Convert.ToString(Math.Abs(DateTime.Now.ToString().GetHashCode())) +
+                         Convert.ToString(Math.Abs(DateTime.Now.Microsecond.ToString().GetHashCode())) +
+                         Convert.ToString(DateTime.Now.Millisecond)
         };
 
         context.Tickets.Add(ticket);
