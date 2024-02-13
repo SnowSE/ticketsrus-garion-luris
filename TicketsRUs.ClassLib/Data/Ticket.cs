@@ -9,13 +9,9 @@ public partial class Ticket
 
     public int? EventId { get; set; }
 
-    public string? Seat { get; set; }
-
     public bool? Scanned { get; set; }
 
     public string? Identifier { get; set; }
 
     public virtual AvailableEvent? Event { get; set; }
-
-    public virtual ICollection<UserTicket> UserTickets { get; set; } = new List<UserTicket>();
 }

@@ -80,9 +80,7 @@
             return;
         }
 
-        await CreateClientIfNotExists();
-
-        controller.CreateTicket(email, Convert.ToInt32(Event_Id));
+        await controller.CreateTicket(Convert.ToInt32(Event_Id));
 
         email = "";
         success = true;
@@ -92,15 +90,5 @@
     private bool IsValidEmail()
     {
         return (email.Contains("@") && email.Contains("."));
-    }
-
-    private async Task<bool> CreateClientIfNotExists()
-    {
-        if (await controller.GetClient(email) == null)
-        {
-            controller.CreateClient(email);    
-        }
-
-        return true;
     }
 }
