@@ -44,9 +44,9 @@ public class ApiTicketController : ControllerBase
         await _service.UpdateTicket(t);
     }
 
-    [HttpPost("ticket")]
-    public async Task CreateTicket(int event_id)
+    [HttpGet("ticket/create/{event_id}")]
+    public async Task<Ticket> CreateTicket(int event_id)
     {
-        await _service.CreateTicket(event_id);
+        return await _service.CreateTicket(event_id);
     }
 }
