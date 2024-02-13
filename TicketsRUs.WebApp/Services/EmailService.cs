@@ -1,20 +1,19 @@
 ﻿using MimeKit;
+using MailKit.Net;
+using TicketsRUs.ClassLib.Services;
 using MailKit.Net.Smtp;
-using System.Net.Mail;
-using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
-namespace TicketsRUs.WebApp.Data
+namespace TicketsRUs.WebApp.Services
 {
-    public class Email
+    public class EmailService(IConfiguration config) : IEmailService
     {
-        public static string sendEmail(string SenderEmail,
-                             string SenderPass,
-                             string ReceiverEmail)
+        
+        public async Task SendEmailAsync(string ReceiverEmail)
         {
             try
             {
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("Auto Emailer", SenderEmail));
+                message.From.Add(new MailboxAddress("Auto Emailer", config["googleAccount"]));
                 message.To.Add(new MailboxAddress("An Email in need of a Message", ReceiverEmail));
                 message.Subject = "Automated Message System";
 
@@ -22,28 +21,26 @@ namespace TicketsRUs.WebApp.Data
                 {
                     Text = @"Thank you for your purchase,
  
-                   We are very excited that you can come to the concert! We are very exited!
+               We are very excited that you can come to the concert! We are very exited!
  
-                    -- TicketUR"
+                -- TicketUR"
                 };
 
-                using (var client = new SmtpClient())
+                using (var client = new MailKit.Net.Smtp.SmtpClient())
                 {
                     client.Connect("smtp.gmail.com", 587, false);
 
                     // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate(SenderEmail, SenderPass);
+                    client.Authenticate(config["googleAccount"], config["googlePassword"]);
 
                     client.Send(message);
                     client.Disconnect(true);
                 }
-                return "Email Sent";
             }
             catch (Exception e)
             {
-                return "Bad Exception Happend";
+                throw new Exception("Bad Exception Happend");
             }
         }
-
     }
 }

@@ -2,6 +2,7 @@ using TicketsRUs.ClassLib.Data;
 using TicketsRUs.ClassLib.Services;
 using TicketsRUs.WebApp.Components;
 using TicketsRUs.ClassLib.Data;
+using TicketsRUs.WebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddControllers();
 builder.Services.AddSingleton<ITicketService, ApiTicketService>();
+builder.Services.AddSingleton<IEmailService, EmailService>();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();

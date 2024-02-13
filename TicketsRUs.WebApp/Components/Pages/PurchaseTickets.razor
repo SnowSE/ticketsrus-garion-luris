@@ -1,6 +1,7 @@
 ﻿@page "/purchase/{Event_Id}"
-@using TicketsRUs.WebApp.Data
+@using TicketsRUs.WebApp
 @inject ITicketService service
+@inject IEmailService _emailservice
 @rendermode InteractiveServer
 
 <PageTitle>Purchase</PageTitle>
@@ -68,7 +69,7 @@
         dataIsLoaded = true;
     }
 
-    async void Purchase()
+    async Task Purchase()
     {
         success = false;
         isError = false;
@@ -81,9 +82,9 @@
             return;
         }
 
-        controller.CreateTicket(Convert.ToInt32(Event_Id));
+        await controller.CreateTicket(Convert.ToInt32(Event_Id));
 
-        Email.sendEmail("ticketur0@gmail.com", "yes", email);
+        await _emailservice.SendEmailAsync(email);
         email = "";
         success = true;
         StateHasChanged();
