@@ -11,29 +11,28 @@ Welcome to your new app.
 
 @if (dataLoaded)
 {
-    <img src="data:image;base64,@System.Convert.ToBase64String(qrCodeArray)" />
+    <img src="@qrCodeString" />
 }
 
 
 @code {
-    byte[] qrCodeArray;
+    string qrCodeString = "";
     bool dataLoaded = false;
+    Bitmap test;
 
 
     protected override async Task OnInitializedAsync()
     {
-        QRCodeGenerator qrGenerator = new QRCodeGenerator();
-        QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
-        QRCode qrCode = new QRCode(qrCodeData);
-        Bitmap qrCodeImage = qrCode.GetGraphic(20);
-
-        using (MemoryStream stream = new MemoryStream())
-        {
-            qrCodeImage.Save(stream, ImageFormat.Png);
-            qrCodeArray = stream.ToArray();
-        }
+        Bitmap qr = QRCodeToolkit.GenerateQRCodeFromString("This is a testing string");
+        byte[] qrCodeArray = QRCodeToolkit.ConvertToByteArray(qr);
+        UpdateStringData(qrCodeArray);
 
         dataLoaded = true;
         StateHasChanged();
+    }
+
+    private void UpdateStringData(byte[] data)
+    {
+        qrCodeString = $"data:image;base64,{Convert.ToBase64String(data)}";
     }
 }

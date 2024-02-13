@@ -20,12 +20,6 @@ public class ApiTicketController : ControllerBase
         return await _service.GetAllAvailableEvents();
     }
 
-    [HttpGet("clients")]
-    public async Task<IEnumerable<Client>> GetAllClients()
-    {
-        return await _service.GetAllClients();
-    }
-
     [HttpGet("tickets")]
     public async Task<IEnumerable<Ticket>> GetAllTickets()
     {
@@ -38,33 +32,21 @@ public class ApiTicketController : ControllerBase
         return await _service.GetAvailableEvent(id);
     }
 
-    [HttpGet("client/{id}")]
-    public async Task<Client> GetClient(string email)
-    {
-        return await _service.GetClient(email);
-    }
-
     [HttpGet("ticket/{id}")]
     public async Task<Ticket> GetTicket(int id)
     {
         return await _service.GetTicket(id);
     }
 
-    [HttpPost("purchase")]
-    public async void CreateTicket(string email, int event_id) 
+    [HttpPost("update/ticket")]
+    public async Task UpdateTicket(Ticket t)
     {
-        await _service.CreateTicket(email, event_id);
-    }
-
-    [HttpPost("client")]
-    public async void CreateClient(string email)
-    {
-        await _service.CreateClient(email);
+        await _service.UpdateTicket(t);
     }
 
     [HttpPost("ticket")]
-    public async void UpdateTicket(Ticket t)
+    public async Task CreateTicket(int event_id)
     {
-        await _service.UpdateTicket(t);
+        await _service.CreateTicket(event_id);
     }
 }
