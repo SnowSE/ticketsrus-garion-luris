@@ -8,6 +8,6 @@ public interface ITicketService
     Task<AvailableEvent> GetAvailableEvent(int id);
     Task<IEnumerable<Ticket>> GetAllTickets();
     Task<Ticket> GetTicket(int id);
-    Task CreateTicket(int event_id);
+    Task<Ticket> CreateTicket(int event_id);
     Task UpdateTicket(Ticket t);
 }

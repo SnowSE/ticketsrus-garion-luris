@@ -5,7 +5,7 @@ namespace TicketsRUs.ClassLib.Services;
 
 public class ApiTicketService(IDbContextFactory<PostgresContext> factory) : ITicketService
 {
-    public async Task CreateTicket(int event_id)
+    public async Task<Ticket> CreateTicket(int event_id)
     {
         var context = factory.CreateDbContext();
 
@@ -21,6 +21,8 @@ public class ApiTicketService(IDbContextFactory<PostgresContext> factory) : ITic
 
         context.Tickets.Add(ticket);
         await context.SaveChangesAsync();
+
+        return ticket;
     }
 
     public async Task<IEnumerable<AvailableEvent>> GetAllAvailableEvents()

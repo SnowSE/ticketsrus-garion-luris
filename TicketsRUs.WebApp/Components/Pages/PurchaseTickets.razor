@@ -1,5 +1,6 @@
 ﻿@page "/purchase/{Event_Id}"
 @using TicketsRUs.WebApp
+@using System.Drawing
 @inject ITicketService service
 @inject IEmailService _emailservice
 @rendermode InteractiveServer
@@ -27,17 +28,17 @@
 
 @if (isError)
 {
-    <p class="p-3 mb-2 bg-danger text-white">Error</p>
-}
-
-@if (invalidEmail)
-{
-    <p class="p-3 mb-2 bg-danger text-white">Invalid Email</p>
+    <p class="p-3 mb-2 bg-danger text-white">@errorString</p>
 }
 
 @if (success)
 {
     <p class="p-3 mb-2 bg-success text-white">Successfully purchased ticket for @Event_Id</p>
+}
+
+@if (qrCode != null)
+{
+    <img src="@qrCode" />
 }
 
 @code {
@@ -47,10 +48,14 @@
     ApiTicketController controller;
     AvailableEvent? selected_event = null;
     string email = "";
+    string? qrCode;
+
     bool dataIsLoaded = false;
-    bool isError = false;
     bool success = false;
-    bool invalidEmail = false;
+
+    bool isError = false;
+    string errorString = "";
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -73,16 +78,18 @@
     {
         success = false;
         isError = false;
-        invalidEmail = false;
+        errorString = "";
 
         if (!IsValidEmail())
         {
-            invalidEmail = true;
+            isError = true;
+            errorString = "Invalid Email";
             StateHasChanged();
             return;
         }
 
-        await controller.CreateTicket(Convert.ToInt32(Event_Id));
+        Ticket t = await controller.CreateTicket(Convert.ToInt32(Event_Id));
+        GenerateQrFor(t);
 
         await _emailservice.SendEmailAsync(email);
         email = "";
@@ -93,5 +100,12 @@
     private bool IsValidEmail()
     {
         return (email.Contains("@") && email.Contains("."));
+    }
+
+    private void GenerateQrFor(Ticket t)
+    {
+        Bitmap qr = QRCodeToolkit.GenerateQRCodeFromString(t.Identifier);
+        byte[] qrCodeArr = QRCodeToolkit.ConvertToByteArray(qr);
+        qrCode = $"data:image;base64,{Convert.ToBase64String(qrCodeArr)}";
     }
 }
