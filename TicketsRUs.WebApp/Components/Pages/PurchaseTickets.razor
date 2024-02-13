@@ -1,4 +1,5 @@
 ﻿@page "/purchase/{Event_Id}"
+@using TicketsRUs.WebApp.Data
 @inject ITicketService service
 @rendermode InteractiveServer
 
@@ -80,8 +81,9 @@
             return;
         }
 
-        await controller.CreateTicket(Convert.ToInt32(Event_Id));
+        controller.CreateTicket(Convert.ToInt32(Event_Id));
 
+        Email.sendEmail("ticketur0@gmail.com", "yes", email);
         email = "";
         success = true;
         StateHasChanged();
