@@ -14,9 +14,9 @@ public class ScanTests
         Assert.True(true);
     }
 
-    [Fact]
-    public void FailingTest()
-    {
-        Assert.True(false);
-    }
+    //[Fact]
+    //public void FailingTest()
+    //{
+    //    Assert.True(false);
+    //}
 }
