@@ -7,6 +7,6 @@ namespace TicketsRUs.ClassLib.Services
 {
     public interface  IEmailService
     {
-        Task SendEmailAsync( string receiverEmail);
+        Task SendEmailAsync(string receiverEmail, string identifier);
     }
 }
