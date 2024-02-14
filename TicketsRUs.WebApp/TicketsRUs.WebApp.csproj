@@ -23,4 +23,8 @@
     <ProjectReference Include="..\TicketsRUs.ClassLib\TicketsRUs.ClassLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="imgs\" />
+  </ItemGroup>
+
 </Project>

@@ -30,7 +30,7 @@ namespace TicketsRUs.WebApp.Services
 
             var attachment = new MimePart("image", "png")
             {
-                Content = new MimeContent(File.OpenRead($"{identifier}.png")),
+                Content = new MimeContent(File.OpenRead($"imgs/{identifier}.png")),
                 ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
                 ContentTransferEncoding = ContentEncoding.Base64,
                 FileName = Path.GetFileName(identifier)
@@ -53,8 +53,6 @@ namespace TicketsRUs.WebApp.Services
                 client.Send(message);
                 client.Disconnect(true);
             }
-
-            File.Delete($"{identifier}.png");
         }
     }
 }

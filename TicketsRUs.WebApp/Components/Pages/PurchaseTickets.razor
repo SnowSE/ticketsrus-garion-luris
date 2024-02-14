@@ -93,6 +93,7 @@
         GenerateQrFor(t);
 
         await _emailservice.SendEmailAsync(email, t.Identifier);
+
         email = "";
         success = true;
         StateHasChanged();
@@ -115,7 +116,7 @@
     {
         using (Image image = Image.FromStream(new MemoryStream(arr)))
         {
-            image.Save($"{id}.png", ImageFormat.Png);
+            image.Save($"imgs/{id}.png", ImageFormat.Png);
         }
     }
 }
