@@ -2,13 +2,15 @@
 using MailKit.Net;
 using TicketsRUs.ClassLib.Services;
 using MailKit.Net.Smtp;
+using MimeKit.Utils;
+using TicketsRUs.ClassLib.Data;
 
 namespace TicketsRUs.WebApp.Services
 {
     public class EmailService(IConfiguration config) : IEmailService
     {
         
-        public async Task SendEmailAsync(string ReceiverEmail)
+        public async Task SendEmailAsync(string ReceiverEmail, string identifier)
         {
             try
             {
@@ -17,14 +19,33 @@ namespace TicketsRUs.WebApp.Services
                 message.To.Add(new MailboxAddress("An Email in need of a Message", ReceiverEmail));
                 message.Subject = "Automated Message System";
 
-                message.Body = new TextPart("plain")
+                BodyBuilder bodyBuilder = new BodyBuilder();
+                bodyBuilder.HtmlBody = $@"<html>
+            <body>
+                <p>Thank your for your Purchase</p>
+                <p>We are very excited that you can come to the concert! We are very exited!
+ 
+                        -- TicketUR""</p>
+                <img alt=""this is an image"" src=""cid:QREmail"" width=""300"" class=""mb-5"" />
+            </body>
+        </html>";
+
+                message.Body = bodyBuilder.ToMessageBody();
+
+                var attachment = new MimePart("image", "png")
                 {
-                    Text = @"Thank you for your purchase,
- 
-               We are very excited that you can come to the concert! We are very exited!
- 
-                -- TicketUR"
+                    Content = new MimeContent(File.OpenRead(identifier)),
+                    ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                    ContentTransferEncoding = ContentEncoding.Base64,
+                    FileName = Path.GetFileName(identifier)
                 };
+
+                attachment.ContentId = MimeUtils.GenerateMessageId();
+                bodyBuilder.Attachments.Add(attachment);
+
+                bodyBuilder.HtmlBody = bodyBuilder.HtmlBody.Replace("{QRCode}", $"cid:{attachment.ContentId}");
+
+                message.Body = bodyBuilder.ToMessageBody();
 
                 using (var client = new MailKit.Net.Smtp.SmtpClient())
                 {

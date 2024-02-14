@@ -91,7 +91,7 @@
         Ticket t = await controller.CreateTicket(Convert.ToInt32(Event_Id));
         GenerateQrFor(t);
 
-        await _emailservice.SendEmailAsync(email);
+        await _emailservice.SendEmailAsync(email, t.Identifier);
         email = "";
         success = true;
         StateHasChanged();

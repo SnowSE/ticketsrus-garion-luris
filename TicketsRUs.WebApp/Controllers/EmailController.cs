@@ -16,9 +16,9 @@ namespace TicketsRUs.WebApp.Controllers
             this.emailSender = emailSender;
         }
         [HttpPost("postemail")]
-        public async Task SendEmail(string receiverEmail)
+        public async Task SendEmail(string receiverEmail, string identifier)
         {
-            await emailSender.SendEmailAsync(receiverEmail);
+            await emailSender.SendEmailAsync(receiverEmail, identifier);
         }
     }
 }
