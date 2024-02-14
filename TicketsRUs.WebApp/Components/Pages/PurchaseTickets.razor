@@ -1,6 +1,7 @@
 ﻿@page "/purchase/{Event_Id}"
 @using TicketsRUs.WebApp
 @using System.Drawing
+@using System.Drawing.Imaging;
 @inject ITicketService service
 @inject IEmailService _emailservice
 @rendermode InteractiveServer
@@ -106,6 +107,15 @@
     {
         Bitmap qr = QRCodeToolkit.GenerateQRCodeFromString(t.Identifier);
         byte[] qrCodeArr = QRCodeToolkit.ConvertToByteArray(qr);
+        SaveToPng(qrCodeArr, t.Identifier);
         qrCode = $"data:image;base64,{Convert.ToBase64String(qrCodeArr)}";
+    }
+
+    private void SaveToPng(byte[] arr, string id)
+    {
+        using (Image image = Image.FromStream(new MemoryStream(arr)))
+        {
+            image.Save($"{id}.png", ImageFormat.Png);
+        }
     }
 }
