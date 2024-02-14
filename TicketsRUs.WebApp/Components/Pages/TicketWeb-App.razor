@@ -38,7 +38,7 @@
     {
         controller = new(service);
 
-        tickets = (await controller.GetAllTickets()).ToList();
+        tickets = (await controller.GetAllTickets()).OrderBy(t => t.EventId).ToList();
         events = (await controller.GetAllAvailableEvents()).ToList();
 
         StateHasChanged();

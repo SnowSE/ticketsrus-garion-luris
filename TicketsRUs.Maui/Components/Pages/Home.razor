@@ -3,22 +3,30 @@
 
 <h1>Scan Test</h1>
 
-<button @onclick="DoScanAsync">Scan</button>
+<button class="btn btn-primary" @onclick="DoScanAsync">Scan</button>
 
 <br />
 
 Scan Result: @scanResultLabel
 
+@if (successfulScan) {
+    <p class="bg-success">Sucess!</p>
+}
+
 @code 
 {
     private string scanResultLabel;
+    private bool successfulScan = false;
 
     public async Task DoScanAsync()
     {
-        var scanResults = await GetScanResultsAsync();
-        var barcode = scanResults;
-        if (barcode != null)
+        successfulScan = false;
+
+        var barcode = await GetScanResultsAsync();
+        if (barcode != null) {
             scanResultLabel = $"Barcodes: {barcode.Format} -> {barcode.Value}";
+            successfulScan = true;
+        }
     }
 
     public async Task<BarcodeResult> GetScanResultsAsync()
