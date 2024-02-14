@@ -93,7 +93,7 @@
         GenerateQrFor(t);
 
         await _emailservice.SendEmailAsync(email, t.Identifier);
-        email = "";
+        `email = "";
         success = true;
         StateHasChanged();
     }
