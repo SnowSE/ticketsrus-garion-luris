@@ -9,3 +9,4 @@ services:
     environment:
       - MYDATABASECONNECTIONSTRING=Server=alex-cool-integration-db;password=mypassword;user id=alex;database=alexdb;
 # no db yet (working on that)
+#
