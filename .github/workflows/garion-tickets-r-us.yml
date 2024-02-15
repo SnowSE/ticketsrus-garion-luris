@@ -8,16 +8,17 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: TicketsRUs.WebApp
+  RUNNER: garion-ticket-runner
 jobs:
   test:
-    runs-on: garion-ticket-runner
+    runs-on: "${{ env.RUNNER }}"
     steps:
     - uses: actions/checkout@v4
     - name: Run Tests
       run: dotnet test "TicketsRUs.Tests"
 
   build:
-    runs-on: garion-ticket-runner
+    runs-on: "${{ env.RUNNER }}"
     needs: test
     steps:
     - uses: actions/checkout@v4
