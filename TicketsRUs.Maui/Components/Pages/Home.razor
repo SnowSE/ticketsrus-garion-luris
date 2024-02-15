@@ -3,40 +3,22 @@
 
 <h1>Scan Test</h1>
 
-<button class="btn btn-primary" @onclick="DoScanAsync">Scan</button>
+<button class="btn btn-primary" @onclick="scanner.DoScanAsync">Scan</button>
 
 <br />
 
-Scan Result: @scanResultLabel
+Scan Result: @scanner.ScanResult
 
-@if (successfulScan) {
+@if (scanner.SuccessfulScan) {
     <p class="bg-success">Sucess!</p>
 }
 
 @code 
 {
-    private string scanResultLabel;
-    private bool successfulScan = false;
+    QRScanner scanner;
 
-    public async Task DoScanAsync()
+    protected override async Task OnInitializedAsync()
     {
-        successfulScan = false;
-
-        var barcode = await GetScanResultsAsync();
-        if (barcode != null) {
-            scanResultLabel = $"Barcodes: {barcode.Format} -> {barcode.Value}";
-            successfulScan = true;
-        }
-    }
-
-    public async Task<BarcodeResult> GetScanResultsAsync()
-    {
-        var cameraPage = new CameraPage();
-
-        await Application.Current.MainPage.Navigation.PushModalAsync(cameraPage);
-        var results = await cameraPage.WaitForResultAsync();
-        await Application.Current.MainPage.Navigation.PopModalAsync();
-
-        return results;
+        scanner = new();
     }
 }
