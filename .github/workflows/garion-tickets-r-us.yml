@@ -40,11 +40,11 @@ jobs:
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-  deploy:
-    runs-on: garion-ticket-runner
-    needs: 
-    - build
-    - test
+  # deploy:
+  #   runs-on: garion-ticket-runner
+  #   needs: 
+  #   - build
+  #   - test
     # steps:
     # - name: Download artifact from build job
     #   uses: actions/download-artifact@v3
