@@ -1,0 +1,11 @@
+version: '3'
+services:
+  garion-ticketsrus-web:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    volumes:
+      - ../:/app
+    working_dir: /app
+    command: cd integrationTests && dotnet test
+    environment:
+      - MYDATABASECONNECTIONSTRING=Server=alex-cool-integration-db;password=mypassword;user id=alex;database=alexdb;
+# no db yet (working on that)
