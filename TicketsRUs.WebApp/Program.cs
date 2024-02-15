@@ -3,6 +3,7 @@ using TicketsRUs.ClassLib.Services;
 using TicketsRUs.WebApp.Components;
 using TicketsRUs.ClassLib.Data;
 using TicketsRUs.WebApp.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.MapGet("/healthCheck", () =>
+{
+    if (DateTime.Now.Second % 10 < 5)
+    {
+        return "healthy";
+    }
+
+    return "unhealthy";
+});
 
 // Swagger Components
 app.UseSwagger();

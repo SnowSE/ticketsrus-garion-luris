@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  garion-ticketsrus-web:
+    build: ..
+    ports:
+      - 8070:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - databaseTunnel
+    healthcheck:
+      test: wget --tries=1 http://localhost/healthCheck || exit 1
+      interval: 2s
+      retries: 5
+      start_period: 2s
+      timeout: 10s
+
+networks:
+  databaseTunnel:
+    driver: bridge

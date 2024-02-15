@@ -1,0 +1,13 @@
+.github
+.vs
+garion-staging
+TicketsRUs.Maui
+TicketsRUs.Tests
+.dockerignore
+.gitignore
+DockerFile
+README.md
+
+bin
+obj
+imgs
