@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
-using Android.Service.QuickSettings;
 using SQLite;
 using TicketsRUs.ClassLib.Data;
 using TicketsRUs.ClassLib.Services;
