@@ -60,4 +60,10 @@ public class ApiTicketService(IDbContextFactory<PostgresContext> factory) : ITic
 
         await context.SaveChangesAsync();
     }
+    public async Task AddTicket<T>(Web<T> t)
+    {
+        var context = factory.CreateDbContext();
+        context.Add(t);
+        await context.SaveChangesAsync();
+    }
 }
