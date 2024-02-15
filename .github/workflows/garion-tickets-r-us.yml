@@ -10,24 +10,17 @@ env:
   WORKING_DIRECTORY: TicketsRUs.WebApp
 jobs:
   test:
-    runs-on: [self-hosted]
+    runs-on: garion-ticket-runner
     steps:
     - uses: actions/checkout@v4
-    # - name: Setup .NET SDK
-    #   uses: actions/setup-dotnet@v3
-    #   with:
-    #     dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - name: Run Tests
       run: dotnet test "TicketsRUs.Tests"
+
   build:
     runs-on: garion-ticket-runner
     needs: test
     steps:
     - uses: actions/checkout@v4
-    # - name: Setup .NET SDK
-    #   uses: actions/setup-dotnet@v3
-    #   with:
-    #     dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: Build
