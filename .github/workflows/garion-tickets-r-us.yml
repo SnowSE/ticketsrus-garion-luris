@@ -13,10 +13,10 @@ jobs:
     runs-on: [self-hosted]
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    # - name: Setup .NET SDK
+    #   uses: actions/setup-dotnet@v3
+    #   with:
+    #     dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - name: Run Tests
       run: dotnet test "TicketsRUs.Tests"
   build:
