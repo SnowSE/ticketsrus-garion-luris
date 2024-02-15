@@ -10,4 +10,5 @@ public interface ITicketService
     Task<Ticket> GetTicket(int id);
     Task<Ticket> CreateTicket(int event_id);
     Task UpdateTicket(Ticket t);
+    Task AddTicket(Ticket t);
 }
