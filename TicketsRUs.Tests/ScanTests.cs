@@ -34,7 +34,7 @@ public class ScanTests
 
         MauiTicketController controller = new(mockService.Object);
 
-        Mock<QRScanner> mockScanner = new(controller);
+        Mock<IQRScanner> mockScanner = new();
         mockScanner.Setup(m => m.DoScanAsync())
             .Callback(async () => { 
                 await mockScanner.Object.GetScanResultsAsync();

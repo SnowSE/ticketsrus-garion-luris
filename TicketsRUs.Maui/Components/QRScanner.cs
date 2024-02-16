@@ -8,7 +8,7 @@ using ZXing.Net.Maui;
 
 namespace TicketsRUs.Maui.Components;
 
-public class QRScanner
+public class QRScanner : IQRScanner
 {
     public string ScanResult { get; private set; } = "";
     public bool SuccessfulScan { get; private set; } = false;
@@ -41,4 +41,10 @@ public class QRScanner
 
         return results.Value;
     }
+}
+
+public interface IQRScanner
+{
+    Task DoScanAsync();
+    Task<string> GetScanResultsAsync();
 }
