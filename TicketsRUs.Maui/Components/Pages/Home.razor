@@ -1,5 +1,8 @@
 @page "/"
-@inject MauiTicketService _service
+@using TicketsRUs.ClassLib.Data
+@using TicketsRUs.ClassLib.Services
+@using TicketsRUs.Maui.Controllers
+@inject ITicketService _service
 
 <h1>Scan Test</h1>
 
@@ -42,12 +45,16 @@ Scan Result: @scanner.ScanResult
 
 @code 
 {
-    QRScanner scanner = new();
+    QRScanner scanner;
     List<Ticket> tickets = new();
     bool dataLoaded = false;
+    MauiTicketController controller;
 
     protected override async Task OnInitializedAsync()
     {
+        controller = new(_service);
+        scanner = new(controller);
+
         tickets = (await _service.GetAllTickets()).OrderBy(t => t.EventId).ToList();
         
         dataLoaded = true;

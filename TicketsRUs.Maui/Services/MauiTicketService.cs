@@ -93,6 +93,14 @@ public class MauiTicketService : ITicketService
                 .First();
     }
 
+    public async Task<Ticket> GetTicket(string identifier)
+    {
+        await Init();
+        return (await db.Table<Ticket>().ToListAsync())
+                .Where(t => t.Identifier == identifier)
+                .First();
+    }
+
     public async Task UpdateAvailableEvent(AvailableEvent ai)
     {
         await Init();

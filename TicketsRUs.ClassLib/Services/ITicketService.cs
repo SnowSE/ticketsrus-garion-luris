@@ -6,6 +6,7 @@ public interface ITicketService
 {
     Task<IEnumerable<Ticket>> GetAllTickets();
     Task<Ticket> GetTicket(int id);
+    Task<Ticket> GetTicket(string identifier);
     Task<Ticket> CreateTicket(int event_id);
     Task<Ticket> CreateTicket(Ticket t);
     Task UpdateTicket(Ticket t);

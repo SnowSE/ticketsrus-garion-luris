@@ -10,7 +10,7 @@ public class MauiTicketController
 
     public MauiTicketController(ITicketService apiService)
     {
-        _localTicketService = new MauiTicketService();
+        _localTicketService = apiService;
     }
 
     public async Task<IEnumerable<Ticket>> GetAllTickets()
@@ -21,6 +21,16 @@ public class MauiTicketController
     public async Task<IEnumerable<AvailableEvent>> GetAllAvailableEvents()
     {
         return await _localTicketService.GetAllAvailableEvents();
+    }
+
+    public async Task<Ticket> GetTicket(string identifier)
+    {
+        return await _localTicketService.GetTicket(identifier);
+    }
+
+    public async Task UpdateTicket(Ticket t)
+    {
+        await _localTicketService.UpdateTicket(t);
     }
 
     public async Task Sync(
