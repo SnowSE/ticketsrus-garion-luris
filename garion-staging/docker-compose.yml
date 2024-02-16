@@ -2,7 +2,7 @@ version: '3'
 
 services:
   garion-ticketsrus-web:
-    build: ..
+    build: ../
     ports:
       - 9769:8080
     environment:
