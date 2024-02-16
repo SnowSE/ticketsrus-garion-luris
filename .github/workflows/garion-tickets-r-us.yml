@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   Deploy:
-    runs-on: garion-runner
+    runs-on: garion-ticket-runner
     steps:
       # - name: "Remove directory + docker down"
       #   run: 
