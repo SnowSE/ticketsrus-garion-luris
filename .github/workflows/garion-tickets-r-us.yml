@@ -9,14 +9,16 @@ env:
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: TicketsRUs.WebApp
 jobs:
-  test:
+  test:  
     runs-on: garion-ticket-runner
-    steps:
-    - uses: actions/checkout@v4
-    - name: Restore Workload
-      run: cd TicketsRUs.Maui && dotnet workload restore
-    - name: Run Tests
-      run: dotnet test "TicketsRUs.Tests"
+    steps:  
+    - uses: actions/checkout@v4  
+    - name: Setup .NET SDK    
+      uses: actions/setup-dotnet@v3    
+      with:      
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}  
+    - name: Test    
+      run: dotnet workload restore && dotnet test "TicketsRUs.Tests"
   build:
     runs-on: garion-ticket-runner
     needs: test
