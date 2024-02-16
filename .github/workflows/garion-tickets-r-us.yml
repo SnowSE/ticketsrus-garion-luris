@@ -10,4 +10,4 @@ jobs:
       - name: "Clone repo"
         run: git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
       - name: "Run docker compose"
-        run: cd garion-staging && docker-compose up --build
+        run: cd garion-staging && docker compose up --build
