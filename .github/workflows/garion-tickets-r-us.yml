@@ -13,6 +13,8 @@ jobs:
     runs-on: garion-ticket-runner
     steps:
     - uses: actions/checkout@v4
+    - name: install maui
+      run: dotnet workload install maui
     - name: Run Tests
       run: dotnet test "TicketsRUs.Tests"
   build:
