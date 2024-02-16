@@ -8,16 +8,24 @@ namespace TicketsRUs.Maui.Services;
 
 public class MauiTicketService : ITicketService
 {
-    SQLiteAsyncConnection db;
-
+    public static string DataBaseFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
+    public static string databaseName = "Local.db3";
+    private SQLiteAsyncConnection db = null;
     async Task Init()
     {
         if (db is not null) { return; }
 
-        db = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
+        db = new(Path.Combine(DataBaseFileName, databaseName));
+        try
+        {
 
-        await db.CreateTableAsync<Ticket>();
-        await db.CreateTableAsync<AvailableEvent>();
+            await db.CreateTableAsync<AvailableEvent>();
+            await db.CreateTableAsync<Ticket>();
+        }
+        catch (Exception ex)
+        {
+            int a = 0;
+        }
     }
 
     public async Task<AvailableEvent> CreateAvailableEvent(AvailableEvent ai)
