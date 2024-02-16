@@ -17,8 +17,6 @@ namespace TicketsRUs.ClassLib.SQLLITE
         // enable multi-threaded database access
             SQLite.SQLiteOpenFlags.SharedCache;
 
-        public static string DatabasePath =>
-            Path.Combine("\\Users\\benson.bird\\AppData\\Local\\Packages\\com.companyname.mauiemailsender_9zz4h110yvjzm\\LocalState\\", DataBaseFileName); //FileSystem.AppDataDirectory
-                                                                                                                                                           //"\\Users\benson.bird\\AppData\\Local\\Packages\\com.companyname.mauiemailsender_9zz4h110yvjzm\\LocalState\\"
+        public static string DatabasePath => Path.Combine(Directory.GetCurrentDirectory(), DataBaseFileName);
     }
 }
