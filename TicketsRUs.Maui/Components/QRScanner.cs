@@ -3,20 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TicketsRUs.ClassLib.Data;
+using TicketsRUs.ClassLib.Services;
 using TicketsRUs.Maui.Controllers;
 using ZXing.Net.Maui;
 
 namespace TicketsRUs.Maui.Components;
 
-public class QRScanner : IQRScanner
+public class QRScanner
 {
     public string ScanResult { get; private set; } = "";
     public bool SuccessfulScan { get; private set; } = false;
-    private MauiTicketController _controller;
+    private ITicketService service;
+    ICameraController cameraController;
 
-    public QRScanner(MauiTicketController controller)
+    public QRScanner(ITicketService service)
     {
-        _controller = controller;
+        this.service = service;
+        cameraController = new CameraController();
+    }
+
+    public QRScanner(ITicketService service, ICameraController c)
+    {
+        this.service = service;
+        cameraController = c;
     }
 
     public virtual async Task DoScanAsync()
@@ -26,12 +36,24 @@ public class QRScanner : IQRScanner
         var barcode = await GetScanResultsAsync();
         if (barcode != null)
         {
+            Ticket t = await service.GetTicket(barcode);
+            t.Scanned = true;
+            await service.UpdateTicket(t);
+            
             ScanResult = barcode;
             SuccessfulScan = true;
         }
     }
 
     public virtual async Task<string> GetScanResultsAsync()
+    {
+        return await cameraController.GetScanResultsAsync();
+    }
+}
+
+public class CameraController() : ICameraController
+{
+    public async Task<string> GetScanResultsAsync()
     {
         var cameraPage = new CameraPage();
 
@@ -43,8 +65,7 @@ public class QRScanner : IQRScanner
     }
 }
 
-public interface IQRScanner
+public interface ICameraController
 {
-    Task DoScanAsync();
     Task<string> GetScanResultsAsync();
 }

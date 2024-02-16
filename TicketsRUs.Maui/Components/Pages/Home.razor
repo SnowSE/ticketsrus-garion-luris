@@ -48,12 +48,10 @@ Scan Result: @scanner.ScanResult
     QRScanner scanner;
     List<Ticket> tickets = new();
     bool dataLoaded = false;
-    MauiTicketController controller;
 
     protected override async Task OnInitializedAsync()
     {
-        controller = new(_service);
-        scanner = new(controller);
+        scanner = new(_service);
 
         tickets = (await _service.GetAllTickets()).OrderBy(t => t.EventId).ToList();
         
