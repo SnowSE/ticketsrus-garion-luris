@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using TicketsRUs.ClassLib.Data;
 
 namespace TicketsRUs.ClassLib.Services;
@@ -15,9 +14,7 @@ public class ApiTicketService(IDbContextFactory<PostgresContext> factory) : ITic
             Id = await context.Tickets.CountAsync() + 1,
             EventId = event_id,
             Scanned = false,
-            Identifier = Convert.ToString(Math.Abs(DateTime.Now.ToString().GetHashCode())) +
-                         Convert.ToString(Math.Abs(DateTime.Now.Microsecond.ToString().GetHashCode())) +
-                         Convert.ToString(DateTime.Now.Millisecond)
+            Identifier = GetIdentifier()
         };
 
         context.Tickets.Add(ticket);
@@ -88,5 +85,10 @@ public class ApiTicketService(IDbContextFactory<PostgresContext> factory) : ITic
         context.Update(ai);
 
         await context.SaveChangesAsync();
+    }
+
+    private string GetIdentifier()
+    {
+        return $"{Math.Abs(DateTime.Now.ToString().GetHashCode())}{Math.Abs(DateTime.Now.Microsecond.ToString().GetHashCode())}{DateTime.Now.Millisecond}";
     }
 }
