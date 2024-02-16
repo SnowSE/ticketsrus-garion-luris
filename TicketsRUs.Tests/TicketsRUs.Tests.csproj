@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TicketsRUs.ClassLib\TicketsRUs.ClassLib.csproj" />
+    <ProjectReference Include="..\TicketsRUs.Maui\TicketsRUs.Maui.csproj" />
     <ProjectReference Include="..\TicketsRUs.WebApp\TicketsRUs.WebApp.csproj" />
   </ItemGroup>
 
