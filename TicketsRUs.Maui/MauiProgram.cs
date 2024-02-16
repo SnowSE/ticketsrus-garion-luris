@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using TicketsRUs.Maui.Services;
 using ZXing.Net.Maui.Controls;
 
 namespace TicketsRUs.Maui
@@ -17,6 +18,8 @@ namespace TicketsRUs.Maui
                 });
 
             builder.Services.AddMauiBlazorWebView();
+            builder.Services.AddSingleton<MauiTicketService>();
+            // TODO: Add SyncController with MauiTicketController instance
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();

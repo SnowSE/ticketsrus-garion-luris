@@ -13,10 +13,21 @@ public class MauiTicketController
         _localTicketService = new MauiTicketService();
     }
 
+    public async Task<IEnumerable<Ticket>> GetAllTickets()
+    {
+        return await _localTicketService.GetAllTickets();
+    }
+
+    public async Task<IEnumerable<AvailableEvent>> GetAllAvailableEvents()
+    {
+        return await _localTicketService.GetAllAvailableEvents();
+    }
+
     public async Task Sync(
         List<AvailableEvent> apiEvents,
         List<AvailableEvent> localEvents,
-        List<Ticket> apiTickets, List<Ticket> localTickets)
+        List<Ticket> apiTickets, 
+        List<Ticket> localTickets)
     {
         await SyncEvents(apiEvents, localEvents);
         await SyncTickets(apiTickets, localTickets);
