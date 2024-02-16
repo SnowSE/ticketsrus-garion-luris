@@ -34,7 +34,7 @@
     </table>
 }
 
-<button class="btn btn-primary" @onclick="scanner.DoScanAsync">Scan</button>
+<button class="btn btn-primary" @onclick="Scan">Scan</button>
 <br />
 
 Scan Result: @scanner.ScanResult
@@ -54,8 +54,13 @@ Scan Result: @scanner.ScanResult
         scanner = new(_service);
 
         tickets = (await _service.GetAllTickets()).OrderBy(t => t.EventId).ToList();
-        
+
         dataLoaded = true;
         StateHasChanged();
+    }
+
+    private async Task Scan()
+    {
+        await scanner.DoScanAsync(0); // FIX - 0 should be the event id that is selected.
     }
 }
