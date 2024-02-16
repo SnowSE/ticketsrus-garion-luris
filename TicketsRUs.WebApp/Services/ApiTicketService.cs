@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using TicketsRUs.ClassLib.Data;
 
 namespace TicketsRUs.ClassLib.Services;
@@ -23,6 +24,26 @@ public class ApiTicketService(IDbContextFactory<PostgresContext> factory) : ITic
         await context.SaveChangesAsync();
 
         return ticket;
+    }
+
+    public async Task<Ticket> CreateTicket(Ticket t)
+    {
+        var context = factory.CreateDbContext();
+
+        context.Tickets.Add(t);
+        await context.SaveChangesAsync();
+
+        return t;
+    }
+
+    public async Task<AvailableEvent> CreateAvailableEvent(AvailableEvent ai)
+    {
+        var context = factory.CreateDbContext();
+
+        context.AvailableEvents.Add(ai);
+        await context.SaveChangesAsync();
+
+        return ai;
     }
 
     public async Task<IEnumerable<AvailableEvent>> GetAllAvailableEvents()
@@ -60,10 +81,12 @@ public class ApiTicketService(IDbContextFactory<PostgresContext> factory) : ITic
 
         await context.SaveChangesAsync();
     }
-    public async Task AddTicket(Ticket t)
+
+    public async Task UpdateAvailableEvent(AvailableEvent ai)
     {
         var context = factory.CreateDbContext();
-        context.Add(t);
+        context.Update(ai);
+
         await context.SaveChangesAsync();
     }
 }
