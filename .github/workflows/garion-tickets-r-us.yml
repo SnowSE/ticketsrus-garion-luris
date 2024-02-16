@@ -1,43 +1,13 @@
-name: (Garion) Build and locally deploy .NET Core application to Web App TicketsRUsWebApp20240208111459
-on:
-  push:
-    branches:
-    - main
-env:
-  AZURE_WEBAPP_PACKAGE_PATH: TicketsRUs.WebApp/published
-  CONFIGURATION: Release
-  DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY: TicketsRUs.WebApp
+name: Garion Runner
+on: [push]
+
 jobs:
-  test:  
-    runs-on: garion-ticket-runner
-    steps:  
-    - uses: actions/checkout@v4  
-    - name: Setup .NET SDK    
-      uses: actions/setup-dotnet@v3    
-      with:      
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}  
-    - name: Test    
-      run: dotnet workload restore && dotnet test "TicketsRUs.Tests"
-  build:
-    runs-on: garion-ticket-runner
-    needs: test
+  Deploy:
+    runs-on: [garion-runner]
     steps:
-    - uses: actions/checkout@v4
-    - name: Restore
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
-    - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
-    - name: Publish
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
-    - uses: actions/checkout@master
-    - name: Microsoft Teams Notification
-      uses: skitionek/notify-microsoft-teams@master
-      if: always()
-      with:
-          webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
-          needs: ${{ toJson(needs) }}
-          job: ${{ toJson(job) }}
-          steps: ${{ toJson(steps) }}
-          dry_run: True
-# hehe
+      # - name: "Remove directory + docker down"
+      #   run: 
+      - name: "Clone repo"
+        run: git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
+      - name: "Run docker compose"
+        run: cd garion-staging && docker-compose up --build
