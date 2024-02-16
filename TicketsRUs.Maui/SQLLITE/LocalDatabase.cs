@@ -70,9 +70,14 @@ namespace TicketsRUs.Maui.SQLLITE
             var localTickets = await localDB.Table<Ticket>().ToListAsync();
             foreach (var ticket in mainTickets)
             {
-                var dontExitsLocally = localTickets.Where(tid => ticket.Id != ticket.Id).ToList();
-
-                //localTickets.Insert(dontExitsLocally, ticket);
+                var dontExitsLocally = localTickets.Where(tid => tid.Id == ticket.Id).ToList();
+                if (dontExitsLocally.Count() < 0)
+                {
+                    foreach(var ticketlocallt in dontExitsLocally)
+                    {
+                        await _ticketservice.AddTicket(ticketlocallt);
+                    }
+                }
 
             }
         }
