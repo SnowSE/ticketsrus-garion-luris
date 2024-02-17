@@ -5,8 +5,10 @@ jobs:
   Deploy:
     runs-on: garion-ticket-runner
     steps:
-      # - name: "Remove directory + docker down"
-      #   run: cd garion-staging && docker compose down -v && cd ../../ && rm -rf ticketsrus-garion-luris || true
+      # - name: "Docker Down"
+      #   run: cd garion-staging && docker compose down -v 
+      - name: "Delete Directory"
+        run: cd ../ && rm -rf ticketsrus-garion-luris || true
       - name: "Workingdir"
         run: pwd
       - name: "Clone repo"
