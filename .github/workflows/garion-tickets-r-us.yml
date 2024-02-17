@@ -5,7 +5,9 @@ jobs:
   Deploy:
     runs-on: garion-ticket-runner
     steps:
-      - name: "Remove directory + docker down"
-        run: cd garion-staging && docker compose down -v && cd ../../ && rm -rf ticketsrus-garion-luris || true && git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
+      # - name: "Remove directory + docker down"
+      #   run: cd garion-staging && docker compose down -v && cd ../../ && rm -rf ticketsrus-garion-luris || true
+      - name: "Clone repo"
+        run: cd ../ && git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
       - name: "Run docker compose"
         run: cd garion-staging && docker compose up --build -d
