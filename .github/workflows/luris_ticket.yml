@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   deploypipeline:
-    runs-on: luris-ticket-runnings
+    runs-on: lurisrunner
     steps:
         run: |
           rm -rf ./ticketsrus-garion-luris
