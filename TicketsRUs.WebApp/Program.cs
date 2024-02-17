@@ -4,6 +4,7 @@ using TicketsRUs.WebApp.Components;
 using TicketsRUs.ClassLib.Data;
 using TicketsRUs.WebApp.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,7 @@ builder.Services.AddSingleton<IEmailService, EmailService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContextFactory<PostgresContext>();
+builder.Services.AddDbContextFactory<PostgresContext>(optionsBuilder => optionsBuilder.UseNpgsql("Name=db"));
 
 var app = builder.Build();
 

@@ -31,38 +31,47 @@ public class SyncController
 
     public async void Sync()
     {
-        HttpClient client = new HttpClient();
+        try
+        {
+            HttpClient client = new HttpClient();
+            List<AvailableEvent>? apiEvents = await client.GetFromJsonAsync<List<AvailableEvent>>($"{ConnectionString}/ApiTicket/events/");
+            List<Ticket>? apiTickets = await client.GetFromJsonAsync<List<Ticket>>($"{ConnectionString}/ApiTicket/tickets/");
 
-        var localEvents = (await localTicketService.GetAllAvailableEvents()).ToList();
-        var localTickets = (await localTicketService.GetAllTickets()).ToList();
-        List<AvailableEvent>? apiEvents = await client.GetFromJsonAsync<List<AvailableEvent>>($"{ConnectionString}/ApiTicket/events/");
-        List<Ticket>? apiTickets = await client.GetFromJsonAsync<List<Ticket>>($"{ConnectionString}/ApiTicket/tickets/");
+            if (apiEvents == null || apiTickets == null)
+            {
+                return;
+            }
 
-        if (apiEvents == null || apiTickets == null) { return; }
-
-        await SyncEvents(apiEvents, localEvents);
-        await SyncTickets(apiTickets, localTickets);
+            await SyncEvents(apiEvents);
+            await SyncTickets(apiTickets);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error in the sync method {ex.Message}");
+        }
     }
 
-    private async Task SyncEvents(List<AvailableEvent> apiEvents, List<AvailableEvent> localEvents)
+    private async Task SyncEvents(List<AvailableEvent> apiEvents)
     {
-        foreach (AvailableEvent ae in apiEvents)
+        var localEvents = await localTicketService.GetAllAvailableEvents();
+
+        foreach (var ae in apiEvents)
         {
-            AvailableEvent? le = localEvents.Where(t => t.Id == ae.Id).Single();
+            var le = localEvents.Where(t => t.Id == ae.Id).Single();
 
             if (le == null)
             {
                 await localTicketService.CreateAvailableEvent(ae);
-                continue;
             }
         }
     }
 
-    private async Task SyncTickets(List<Ticket> apiTickets, List<Ticket> localTickets)
+    private async Task SyncTickets(List<Ticket> apiTickets)
     {
+        var localTickets = await localTicketService.GetAllTickets();
         foreach (Ticket at in apiTickets)
         {
-            Ticket? lt = localTickets.Where(t => t.Id == at.Id).Single();
+            var lt = localTickets.Where(t => t.Id == at.Id).Single();
 
             if (lt == null)
             {
@@ -77,11 +86,6 @@ public class SyncController
             {
                 lt.Scanned = true;
                 await localTicketService.UpdateTicket(lt);
-            }
-
-            if (isDuplicateScan)
-            {
-                // TODO: Do some logic here to notify that there was a duplicate scan
             }
         }
     }
