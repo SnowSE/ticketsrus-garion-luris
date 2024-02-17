@@ -7,11 +7,9 @@ jobs:
     steps:
       # - name: "Docker Down"
       #   run: cd garion-staging && docker compose down -v 
-      - name: "Delete Directory"
-        run: cd ../ && rm -rf ticketsrus-garion-luris || true
       - name: "Workingdir"
         run: pwd
       - name: "Clone repo"
-        run: cd ../ && git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
+        run: cd ../ && rm -rf ticketsrus-garion-luris || true && cd ../ && git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
       - name: "Run docker compose"
         run: cd garion-staging && docker compose up --build -d
