@@ -34,7 +34,7 @@
     </table>
 }
 
-<button class="btn btn-primary" @onclick="Scan">Scan</button>
+@* <button class="btn btn-primary" @onclick="Scan">Scan</button> *@
 <br />
 
 Scan Result: @scanner.ScanResult
@@ -47,16 +47,24 @@ Scan Result: @scanner.ScanResult
 {
     QRScanner scanner;
     List<Ticket> tickets = new();
+    List<AvailableEvent> events = new();
+    SyncController syn;
+
+
     bool dataLoaded = false;
 
     protected override async Task OnInitializedAsync()
     {
         scanner = new(_service);
+        syn = new("luris-garion-ticketsrus.postgres.database.azure.com", _service);
 
         tickets = (await _service.GetAllTickets()).OrderBy(t => t.EventId).ToList();
+        events = (await _service.GetAllAvailableEvents()).ToList();
 
         dataLoaded = true;
         StateHasChanged();
+        await syn.Start();
+
     }
 
     private async Task Scan()

@@ -12,21 +12,20 @@ namespace TicketsRUs.Maui.Controllers;
 public class SyncController
 {
     public string ConnectionString { get; set; } = "";
-    public int SyncRate { get; set; } = 30; // seconds
+    public int SyncRate { get; set; } = 5; // seconds
     private ITicketService localTicketService;
     public SyncController(string conn, ITicketService localTicketService)
     {
         ConnectionString = conn;
         this.localTicketService = localTicketService;
-        SyncLoop();
     }
 
-    public void SyncLoop()
+    public async Task Start()
     {
-        while (true)
+        var timer = new PeriodicTimer(TimeSpan.FromSeconds(SyncRate));
+        while( await timer.WaitForNextTickAsync() )
         {
             Sync();
-            Thread.Sleep(SyncRate*1000);
         }
     }
 

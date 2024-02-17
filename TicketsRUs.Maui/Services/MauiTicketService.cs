@@ -3,6 +3,7 @@ using SQLite;
 using TicketsRUs.ClassLib;
 using TicketsRUs.ClassLib.Data;
 using TicketsRUs.ClassLib.Services;
+using TicketsRUs.Maui.Controllers;
 
 namespace TicketsRUs.Maui.Services;
 
@@ -11,21 +12,15 @@ public class MauiTicketService : ITicketService
     public static string DataBaseFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
     public static string databaseName = "Local.db3";
     private SQLiteAsyncConnection db = null;
+
     async Task Init()
     {
         if (db is not null) { return; }
 
         db = new(Path.Combine(DataBaseFileName, databaseName));
-        try
-        {
 
-            await db.CreateTableAsync<AvailableEvent>();
-            await db.CreateTableAsync<Ticket>();
-        }
-        catch (Exception ex)
-        {
-            int a = 0;
-        }
+        await db.CreateTableAsync<AvailableEvent>();
+        await db.CreateTableAsync<Ticket>();
     }
 
     public async Task<AvailableEvent> CreateAvailableEvent(AvailableEvent ai)
