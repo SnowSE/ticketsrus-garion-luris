@@ -1,4 +1,4 @@
-name: Luris
+name: LurisRunner
 on: [push]
 jobs:
   deploypipeline:
@@ -13,3 +13,5 @@ jobs:
         run: |
           cd ./ticketsrus-garion-luris/LurisDockercompose
           docker compose up --build -d
+
+#############################################################################################################################
