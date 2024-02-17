@@ -1,14 +1,14 @@
 name: Luris
 on: [push]
-
 jobs:
   deploypipeline:
     runs-on: lurisrunner
     steps:
+      - name: "do something to remove"
         run: |
           rm -rf ./ticketsrus-garion-luris
-      - name: "Clonnign the repo"
-        run: git clone https://${{ secrets.LURIS_SECRET_HOMEWORKS }}@github.com/SnowSE/ticketsrus-garion-luris.git
+      - name: "Clonning the repo"
+        run: git clone https://${{secrets.LURIS_SECRET_HOMEWORKS}}@github.com/SnowSE/ticketsrus-garion-luris.git
       - name: "Run docker compose"
         run: |
           cd ./ticketsrus-garion-luris/LurisDockercompose
