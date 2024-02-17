@@ -1,10 +1,10 @@
-name: Build and deploy .NET Core application to Web App TicketsRUsWebApp20240208111459
+name: Build and deploy .NET Core application to Web App TicketsRUsWebApp20240216164850
 on:
   push:
     branches:
     - main
 env:
-  AZURE_WEBAPP_NAME: TicketsRUsWebApp20240208111459
+  AZURE_WEBAPP_NAME: TicketsRUsWebApp20240216164850
   AZURE_WEBAPP_PACKAGE_PATH: TicketsRUs.WebApp/published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
@@ -44,5 +44,5 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.TicketsRUsWebApp20240208111459_04D2 }}
+        publish-profile: ${{ secrets.TicketsRUsWebApp20240216164850_AA92 }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
