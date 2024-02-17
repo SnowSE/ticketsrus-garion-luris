@@ -1,0 +1,12 @@
+name: Luris
+on: [push]
+
+jobs:
+  Deploy:
+    runs-on: luris-ticket-runnings
+    steps:
+        run: rm -rf ticketsrus-garion-luris && docker compose down || true
+      - name: "Clonnign the repo"
+        run: git clone https://${{ secrets.LURIS_SECRET_HOMEWORKS }}@github.com/SnowSE/ticketsrus-garion-luris.git
+      - name: "Run docker compose"
+        run: cd ./ticketsrus-garion-luris/garion-staging && docker compose up --build -d
