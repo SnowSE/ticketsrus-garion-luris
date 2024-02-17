@@ -1,15 +1,19 @@
 name: Garion Runner
 on: [push]
-
+#wd: /home/garion/actions-runner/_work/ticketsrus-garion-luris/ticketsrus-garion-luris
 jobs:
   Deploy:
     runs-on: garion-ticket-runner
     steps:
-      # - name: "Remove directory + docker down"
-      #   run: docker compose down -v && rm -rf ticketsrus-garion-luris || true
+      - name: "Get wd"
+        run: pwd
+      - name: "Remove directory + docker down"
+        run: cd garion-staging && docker compose down -v && cd ../../ && rm -rf ticketsrus-garion-luris || true
       - name: "Get wd"
         run: pwd
       - name: "Clone repo"
         run: git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
+      - name: "Get wd"
+        run: pwd
       - name: "Run docker compose"
-        run: cd ./ticketsrus-garion-luris/garion-staging && docker compose up --build -d
+        run: cd garion-staging && docker compose up --build -d
