@@ -19,7 +19,7 @@ public class Sync
     public Sync(ITicketService localTicketService)
     {
         this.localTicketService = localTicketService;
-        ConnectionString = Preferences.Default.Get("addres", "https://localhost:7048");
+        ConnectionString = Preferences.Default.Get("addres", "https://ticketsruswebapp20240216164850.azurewebsites.net/");
     }
 
     public async Task Start()
