@@ -24,11 +24,11 @@ public class Sync
 
     public async Task Start()
     {
-        //var timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
-        //while( await timer.WaitForNextTickAsync() )
-        //{
+        var timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
+        while( await timer.WaitForNextTickAsync() )
+        {
            await SyncMethod();
-        //}
+        }
     }
 
     public async Task SyncMethod()
