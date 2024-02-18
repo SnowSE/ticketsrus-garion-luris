@@ -2,6 +2,7 @@
 using TicketsRUs.ClassLib.Data;
 using TicketsRUs.ClassLib.Services;
 using TicketsRUs.Maui.Components;
+using TicketsRUs.Maui.Controllers;
 
 namespace TicketsRUs.Tests;
 
@@ -94,5 +95,17 @@ public class ScanTests
 
         Assert.False(t.Scanned);
         Assert.False(wrongTicket.Scanned);
+    }
+
+    [Fact]
+    public async void LocalDatabaseRefreshed_When_ApiAddressChanged()
+    {
+        Mock<ITicketService> mockService = new();
+        mockService.Setup(m => m.ResetDatabase());
+
+        SyncController unitUnderTest = new("", mockService.Object);
+        await unitUnderTest.ChangeConnectionString("https://hehe.net");
+
+        mockService.Verify(m => m.ResetDatabase());
     }
 }

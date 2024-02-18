@@ -14,8 +14,6 @@ public class SyncController
     {
         ConnectionString = conn;
         this.localTicketService = localTicketService;
-        Thread thread = new Thread(new ThreadStart(StartSyncLoop));
-        thread.Start();
     }
 
     public SyncController(ITicketService localTicketService)
