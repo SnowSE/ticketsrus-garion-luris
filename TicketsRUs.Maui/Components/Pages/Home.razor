@@ -9,17 +9,15 @@
 
 <h3>TicketWeb_App</h3>
 
-@if (dataLoaded)
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">EventId</th>
-                <th scope="col">EventName</th>
-                <th scope="col">Start-Time</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">EventId</th>
+            <th scope="col">EventName</th>
+            <th scope="col">Start-Time</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
         <tbody>
             @foreach (var ev in events)
             {
@@ -36,55 +34,28 @@
     </table>
 }
 
-Scan Result: @scanner.ScanResult
+@* Scan Result: @scanner.ScanResult
 
 @if (scanner.SuccessfulScan)
 {
     <p class="bg-success">Success!</p>
-}
+} *@
 
 @code
 {
-    QRScanner scanner;
-    List<AvailableEvent> events = new List<AvailableEvent>();
-    bool dataLoaded = false;
+    List<AvailableEvent> events = new();
+    Sync sync;
 
     protected override async Task OnInitializedAsync()
     {
-        try 
-        {
-            scanner = new QRScanner(_service);
-            await LoadEvents();
-            dataLoaded = true;
-            StateHasChanged();
-
-            // 4 minutes
-            while (true)
-            {
-                await Task.Delay(TimeSpan.FromMinutes(4));
-                await SyncDatabase();
-            }
-        }
-        catch (Exception ex)
-        {
-            int number = 1;
-        }
-
-    }
-
-    private async Task LoadEvents()
-    {
         events = (await _service.GetAllAvailableEvents()).ToList();
+        sync = new(_service);
+        await sync.Start();
     }
 
     public async Task HandleEvent(int eventId)
     {
-        await scanner.DoScanAsync(eventId);
+        nav.NavigateTo($"/scan/{eventId}");
     }
-
-    private async Task SyncDatabase()
-    {
-        var syncController = new SyncController("luris-garion-ticketsrus.postgres.database.azure.com", _service);
-        await syncController.Start();
-    }
+ 
 }

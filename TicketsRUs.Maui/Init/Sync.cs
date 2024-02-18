@@ -9,31 +9,32 @@ using TicketsRUs.ClassLib.Services;
 
 namespace TicketsRUs.Maui.Controllers;
 
-public class SyncController
+public class Sync
 {
+    HttpClient client = new();
     public string ConnectionString { get; set; } = "";
-    public int SyncRate { get; set; } = 5; // seconds
     private ITicketService localTicketService;
-    public SyncController(string conn, ITicketService localTicketService)
+
+
+    public Sync(ITicketService localTicketService)
     {
-        ConnectionString = conn;
         this.localTicketService = localTicketService;
+        ConnectionString = Preferences.Default.Get("addres", "https://localhost:7048");
     }
 
     public async Task Start()
     {
-        var timer = new PeriodicTimer(TimeSpan.FromSeconds(SyncRate));
-        while( await timer.WaitForNextTickAsync() )
-        {
-            Sync();
-        }
+        //var timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
+        //while( await timer.WaitForNextTickAsync() )
+        //{
+           await SyncMethod();
+        //}
     }
 
-    public async void Sync()
+    public async Task SyncMethod()
     {
         try
         {
-            HttpClient client = new HttpClient();
             List<AvailableEvent>? apiEvents = await client.GetFromJsonAsync<List<AvailableEvent>>($"{ConnectionString}/ApiTicket/events/");
             List<Ticket>? apiTickets = await client.GetFromJsonAsync<List<Ticket>>($"{ConnectionString}/ApiTicket/tickets/");
 

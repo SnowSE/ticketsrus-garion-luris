@@ -20,7 +20,7 @@ builder.Services.AddSingleton<IEmailService, EmailService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContextFactory<PostgresContext>(optionsBuilder => optionsBuilder.UseNpgsql("Name=db"));
+builder.Services.AddDbContextFactory<PostgresContext>(options => options.UseNpgsql("Name=db"));
 
 var app = builder.Build();
 
