@@ -33,9 +33,9 @@ public class Sync
 
     public async Task SyncMethod()
     {
+        List<AvailableEvent>? apiEvents = await client.GetFromJsonAsync<List<AvailableEvent>>($"{ConnectionString}/ApiTicket/events/");
         try
         {
-            List<AvailableEvent>? apiEvents = await client.GetFromJsonAsync<List<AvailableEvent>>($"{ConnectionString}/ApiTicket/events/");
             List<Ticket>? apiTickets = await client.GetFromJsonAsync<List<Ticket>>($"{ConnectionString}/ApiTicket/tickets/");
 
             if (apiEvents == null || apiTickets == null)
@@ -46,10 +46,10 @@ public class Sync
             await SyncEvents(apiEvents);
             await SyncTickets(apiTickets);
         }
-        catch (Exception ex)
-        {
-            throw new Exception($"Error in the sync method {ex.Message}");
+        catch (Exception e) {
+            Console.WriteLine(e.Message);
         }
+
     }
 
     private async Task SyncEvents(List<AvailableEvent> apiEvents)

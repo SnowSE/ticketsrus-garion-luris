@@ -11,6 +11,6 @@ namespace TicketsRUs.Maui.Services
     {
         public string DatabaseDirectory { get => "Local.db3"; }
 
-        public string DatabaseName {get => FileSystem.Current.AppDataDirectory;}
+        public string DatabaseName { get => FileSystem.Current.AppDataDirectory; }
     }
 }

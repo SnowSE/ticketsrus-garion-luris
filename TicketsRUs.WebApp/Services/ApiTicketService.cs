@@ -52,7 +52,8 @@ public class ApiTicketService(IDbContextFactory<PostgresContext> factory) : ITic
     public async Task<IEnumerable<Ticket>> GetAllTickets()
     {
         var context = factory.CreateDbContext();
-        return await context.Tickets.Include(t => t.Event).ToListAsync();
+        var tickets = await context.Tickets.ToListAsync();
+        return tickets;
     }
 
     public async Task<AvailableEvent> GetAvailableEvent(int id)
