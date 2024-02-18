@@ -13,6 +13,8 @@ namespace TicketsRUs.Maui.Init
 {
     public class LocalDataBaseInit
     {
+
+        //I add this becausse I trully belive ourdata base is wrong!
         IDatabaseLocation _data;
         public LocalDataBaseInit(IDatabaseLocation data)
         {

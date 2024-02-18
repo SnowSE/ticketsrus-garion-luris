@@ -9,8 +9,8 @@ namespace TicketsRUs.Maui.Services
 {
     internal class LocalDatabaseService : IDatabaseLocation
     {
-        public string DatabaseDirectory {get =>"Local.db3";}
+        public string DatabaseDirectory { get => "Local.db3"; }
 
-        public string DatabaseName => FileSystem.Current.AppDataDirectory;
+        public string DatabaseName {get => FileSystem.Current.AppDataDirectory;}
     }
 }
