@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TicketsRUs.ClassLib.Data;
+﻿using TicketsRUs.ClassLib.Data;
 using TicketsRUs.ClassLib.Services;
-using TicketsRUs.Maui.Controllers;
-using ZXing.Net.Maui;
 
 namespace TicketsRUs.Maui.Components;
 

@@ -5,9 +5,9 @@ using TicketsRUs.ClassLib.Services;
 
 namespace TicketsRUs.Maui.Controllers;
 
-public class SyncController : ISyncController
+public class SyncController
 {
-    public string ConnectionString { get; set; } = "https://ticketsruswebapp20240216164850.azurewebsites.net";
+    public string ConnectionString { get; private set; } = "https://ticketsruswebapp20240216164850.azurewebsites.net";
     public int SyncRate { get; set; } = 5; // seconds
     private ITicketService localTicketService;
     public SyncController(string conn, ITicketService localTicketService)
@@ -53,7 +53,7 @@ public class SyncController : ISyncController
     {
         foreach (AvailableEvent ae in apiEvents)
         {
-            AvailableEvent? le = localEvents.Where(t => t.Id == ae.Id).Single();
+            AvailableEvent? le = localEvents.FirstOrDefault(t => t.Id == ae.Id);
 
             if (le == null)
             {
@@ -67,7 +67,7 @@ public class SyncController : ISyncController
     {
         foreach (Ticket at in apiTickets)
         {
-            Ticket? lt = localTickets.Where(t => t.Id == at.Id).Single();
+            Ticket? lt = localTickets.FirstOrDefault(t => t.Id == at.Id);
 
             if (lt == null)
             {
@@ -90,9 +90,10 @@ public class SyncController : ISyncController
             }
         }
     }
-}
 
-public interface ISyncController
-{
-    void Sync();
+    public async Task ChangeConnectionString(string newConnectionString)
+    {
+        ConnectionString = newConnectionString;
+        await localTicketService.ResetDatabase();
+    }
 }

@@ -15,4 +15,6 @@ public interface ITicketService
     Task<AvailableEvent> GetAvailableEvent(int id);
     Task<AvailableEvent> CreateAvailableEvent(AvailableEvent ai);
     Task UpdateAvailableEvent(AvailableEvent ai);
+
+    Task ResetDatabase();
 }

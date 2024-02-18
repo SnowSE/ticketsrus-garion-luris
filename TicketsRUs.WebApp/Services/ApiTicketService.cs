@@ -100,4 +100,9 @@ public class ApiTicketService(IDbContextFactory<PostgresContext> factory) : ITic
     {
         return $"{Math.Abs(DateTime.Now.ToString().GetHashCode())}{Math.Abs(DateTime.Now.Microsecond.ToString().GetHashCode())}{DateTime.Now.Millisecond}";
     }
+
+    public Task ResetDatabase()
+    {
+        return Task.CompletedTask;
+    }
 }

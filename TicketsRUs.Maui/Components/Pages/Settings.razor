@@ -4,5 +4,27 @@
 
 <h1>Settings</h1>
 
-<input type="text" class="form-control" placeholder="Current API: @syncController.ConnectionString" @bind="syncController.ConnectionString">
-<input type="text" class="form-control" placeholder="Current Sync Rate: @syncController.SyncRate" @bind="syncController.SyncRate">
+<div class="mb-3">
+    <label>API Address</label>
+    <input type="text" class="form-control" placeholder="Current: @syncController.ConnectionString" @bind="connectionString">
+    <button class="btn btn-primary" @onclick="ChangeConnectionString">Change Connection String</button>
+</div>
+
+<div class="mb-3">
+    <label>Sync Frequency (seconds)</label>
+    <input type="text" class="form-control" placeholder="Current: @syncController.SyncRate" @bind="syncController.SyncRate">
+</div>
+
+@code {
+    string connectionString = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        connectionString = syncController.ConnectionString;
+    }
+
+    private async Task ChangeConnectionString()
+    {
+        await syncController.ChangeConnectionString(connectionString);
+    }
+}

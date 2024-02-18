@@ -1,0 +1,61 @@
+@page "/scan/{Event_Id}"
+@using TicketsRUs.ClassLib.Data
+@using TicketsRUs.ClassLib.Services
+@using TicketsRUs.Maui.Controllers
+@inject ITicketService _service
+@inject SyncController syncController
+
+
+@if (isError)
+{
+    <p class="p-3 mb-2 bg-danger text-white">Invalid</p>
+}
+
+@if (hasScanned)
+{
+    @if (!isError)
+    {
+        <p class="p-3 mb-2 bg-success text-white">Success!</p>
+    }
+}
+
+
+@code
+{
+    [Parameter]
+    public string Event_Id { get; set; }
+
+    QRScanner scanner;
+    List<Ticket> tickets = new();
+    List<AvailableEvent> events = new();
+
+    bool hasScanned = false;
+    bool isError = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Convert.ToInt32(Event_Id);
+        }
+        catch (Exception e)
+        {
+            isError = true;
+            return;
+        }
+
+        scanner = new(_service);
+
+        tickets = (await _service.GetAllTickets()).OrderBy(t => t.EventId).ToList();
+        events = (await _service.GetAllAvailableEvents()).ToList();
+
+        isError = !(await DoScan());
+        hasScanned = true;
+    }
+
+    private async Task<bool> DoScan()
+    {
+        return await scanner.DoScanAsync(Convert.ToInt32(Event_Id));
+    }
+}

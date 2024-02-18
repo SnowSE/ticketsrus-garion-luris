@@ -37,22 +37,19 @@
     </table>
 }
 
-@* Scan Result: @scanner.ScanResult
-
-@if (scanner.SuccessfulScan)
-{
-    <p class="bg-success">Success!</p>
-} *@
 
 @code
 {
     List<AvailableEvent> events = new();
     bool dataLoaded = false;
-    
+
 
     protected override async Task OnInitializedAsync()
     {
-        events = (await _service.GetAllAvailableEvents()).ToList();
+        while (events.Count == 0)
+        {
+            events = (await _service.GetAllAvailableEvents()).ToList();
+        }
         dataLoaded = true;
     }
 

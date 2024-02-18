@@ -21,7 +21,6 @@ public static class MauiProgram
 
         builder.Services.AddMauiBlazorWebView();
         builder.Services.AddSingleton<ITicketService, MauiTicketService>();
-        //builder.Services.AddSingleton<IDatabaseLocation, LocalDatabaseService>();
         builder.Services.AddSingleton<SyncController>();
 
 #if DEBUG

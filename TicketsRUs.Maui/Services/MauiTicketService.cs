@@ -107,4 +107,12 @@ public class MauiTicketService : ITicketService
         await Init();
         await db.UpdateAsync(t);
     }
+
+    public async Task ResetDatabase()
+    {
+        await Init();
+
+        await db.DeleteAllAsync<Ticket>();
+        await db.DeleteAllAsync<AvailableEvent>();
+    }
 }
