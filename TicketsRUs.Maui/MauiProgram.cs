@@ -20,6 +20,7 @@ namespace TicketsRUs.Maui
 
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddSingleton<ITicketService, MauiTicketService>();
+            builder.Services.AddSingleton<IDatabaseLocation, LocalDatabaseService>();
             // TODO: Add SyncController with MauiTicketController instance
 
 #if DEBUG
