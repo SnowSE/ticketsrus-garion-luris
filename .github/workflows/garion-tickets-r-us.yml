@@ -11,3 +11,12 @@ jobs:
         run: cd ../ && rm -rf ticketsrus-garion-luris || true && git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
       - name: "Run docker compose"
         run: cd garion-staging && docker compose up --build -d
+      - name: Microsoft Teams Notification
+        uses: skitionek/notify-microsoft-teams@master
+        if: always()
+        with:
+            webhook_url: ${{ secrets.GARION_WEBHOOK }}
+            needs: ${{ toJson(needs) }}
+            job: ${{ toJson(job) }}
+            steps: ${{ toJson(steps) }}
+            dry_run: True
