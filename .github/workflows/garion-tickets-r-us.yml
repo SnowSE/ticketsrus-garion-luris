@@ -1,7 +1,18 @@
 name: Garion Runner
 on: [push]
-#wd: /home/garion/actions-runner/_work/ticketsrus-garion-luris/ticketsrus-garion-luris
 jobs:
+
+  test:
+    runs-on: garion-ticket-runner
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    - name: Test
+      run: dotnet test "TicketsRUs.Tests"
+
   Deploy:
     runs-on: garion-ticket-runner
     steps:
@@ -11,12 +22,16 @@ jobs:
         run: cd ../ && rm -rf ticketsrus-garion-luris || true && git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
       - name: "Run docker compose"
         run: cd garion-staging && docker compose up --build -d
+
+  Notify:
+    runs-on: garion-ticket-runner
+    steps:
+      - uses: actions/checkout@master
       - name: Microsoft Teams Notification
         uses: skitionek/notify-microsoft-teams@master
         if: always()
         with:
-            webhook_url: ${{ secrets.GARION_WEBHOOK }}
-            needs: ${{ toJson(needs) }}
-            job: ${{ toJson(job) }}
-            steps: ${{ toJson(steps) }}
-            dry_run: True
+          webhook_url: ${{ secrets.GARION_WEBHOOK }}
+          needs: ${{ toJson(needs) }}
+          job: ${{ toJson(job) }}
+          steps: ${{ toJson(steps) }}
