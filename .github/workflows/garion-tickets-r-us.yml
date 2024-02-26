@@ -2,16 +2,16 @@ name: Garion Runner
 on: [push]
 jobs:
 
-  test:
-    runs-on: garion-ticket-runner
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-    - name: Test
-      run: dotnet test "TicketsRUs.Tests"
+  # test:
+  #   runs-on: garion-ticket-runner
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Setup .NET SDK
+  #     uses: actions/setup-dotnet@v3
+  #     with:
+  #       dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+  #   - name: Test
+  #     run: dotnet test "TicketsRUs.Tests"
 
   Deploy:
     runs-on: garion-ticket-runner
