@@ -2,6 +2,7 @@
 -- PostgreSQL database dump
 --
 create role azure_pg_admin;
+create role ticket_admin;
 
 -- Dumped from database version 16.0
 -- Dumped by pg_dump version 16.2 (Debian 16.2-1.pgdg120+2)

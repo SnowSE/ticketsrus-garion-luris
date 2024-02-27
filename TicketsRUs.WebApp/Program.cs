@@ -1,10 +1,10 @@
 using TicketsRUs.ClassLib.Data;
 using TicketsRUs.ClassLib.Services;
 using TicketsRUs.WebApp.Components;
-using TicketsRUs.ClassLib.Data;
 using TicketsRUs.WebApp.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +20,9 @@ builder.Services.AddSingleton<IEmailService, EmailService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Health Check
+builder.Services.AddHealthChecks();
+
 builder.Services.AddDbContextFactory<PostgresContext>(options => options.UseNpgsql("Name=db"));
 
 var app = builder.Build();
@@ -32,14 +35,25 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.MapGet("/healthCheck", () =>
-{
-    if (DateTime.Now.Second % 10 < 5)
-    {
-        return "healthy";
-    }
+//app.MapGet("/healthCheck", () =>
+//{
+//    if (DateTime.Now.Second % 10 < 5)
+//    {
+//        return "healthy";
+//    }
 
-    return "unhealthy";
+//    return "unhealthy";
+//});
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    AllowCachingResponses = false,
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Degraded] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+    }
 });
 
 // Swagger Components
