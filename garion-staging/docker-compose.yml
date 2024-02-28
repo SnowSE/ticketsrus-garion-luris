@@ -56,6 +56,57 @@ services:
     networks:
       otel:
 
+  tempo:
+    # https://github.com/grafana/tempo/releases
+    image: grafana/tempo:2.0.1
+    container_name: tempo
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./tempo/tempo.yml:/etc/tempo.yaml
+      - tempo:/tmp/tempo
+    restart: unless-stopped
+    ports:
+      - 3200:3200  # tempo
+      - 4007:4317  # otlp grpc
+    depends_on:
+      - otel-collector
+    networks:
+      otel:
+      
+  loki:
+    # https://github.com/grafana/loki/releases
+    image: grafana/loki:2.8.0
+    container_name: loki
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - /etc/localtime:/etc/localtime:ro      
+      - ./loki/loki.yml:/etc/loki/local-config.yaml
+      - loki:/data/loki
+    restart: unless-stopped
+    ports:
+      - 3100:3100
+    networks:
+      otel:
+      
+  otel-collector:
+    # https://github.com/open-telemetry/opentelemetry-collector-contrib/releases
+    container_name: otel
+    hostname: otel
+    image: otel/opentelemetry-collector-contrib:0.75.0
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel/otel.yml:/etc/otel-collector-config.yaml
+    restart: unless-stopped
+    ports:
+      - 8888:8888   # Prometheus metrics exposed by the collector
+      - 8889:8889   # Prometheus exporter metrics
+      - 4317:4317   # OTLP gRPC receiver                        ########### Cannot edit this value to listen for API?
+      - 9200:55679  # zpages
+      - 13133:13133 # Health check
+    networks:
+      otel:
+
   grafana:
     # https://github.com/grafana/grafana/releases
     image: grafana/grafana:9.4.7
@@ -74,8 +125,19 @@ services:
       - 3000:3000
     depends_on:
       - prometheus
-      # - tempo
-      # - loki      
+      - tempo
+      - loki      
+    networks:
+      otel:
+
+  rabbitmq:
+    # https://github.com/docker-library/rabbitmq
+    image: rabbitmq:3.11.0-management-alpine
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
     networks:
       otel:
 
@@ -83,7 +145,7 @@ networks:
   otel:
 
 volumes:
-  # loki:
+  loki:
   prometheus:
-  # tempo:
+  tempo:
   grafana-data:

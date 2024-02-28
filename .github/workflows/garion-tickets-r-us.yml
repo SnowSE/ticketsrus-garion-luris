@@ -2,26 +2,32 @@ name: Garion Runner
 on: [push]
 jobs:
 
-  # test:
-  #   runs-on: garion-ticket-runner
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - name: Setup .NET SDK
-  #     uses: actions/setup-dotnet@v3
-  #     with:
-  #       dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-  #   - name: Test
-  #     run: dotnet test "TicketsRUs.Tests"
+  test:
+    runs-on: garion-ticket-runner
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    - name: Test
+      run: dotnet test "TicketsRUs.Tests"
 
   Deploy:
     runs-on: garion-ticket-runner
     steps:
       - name: "Docker Down"
-        run: cd garion-staging && docker compose down -v 
+        run: |
+          cd ./ticketsrus-garion-luris/garion-staging 
+          docker compose down -v 
       - name: "Clone repo"
-        run: cd ../ && rm -rf ticketsrus-garion-luris || true && git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
+        run: |
+          rm -rf ./ticketsrus-garion-luris || true 
+          git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
       - name: "Run docker compose"
-        run: cd garion-staging && docker compose up --build -d
+        run: |
+          cd ./ticketsrus-garion-luris/garion-staging 
+          docker compose up --build -d
 
   Notify:
     runs-on: garion-ticket-runner
