@@ -9,6 +9,7 @@ using Serilog;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using OpenTelemetry.Logs;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager Configuration = builder.Configuration;
@@ -22,39 +23,52 @@ builder.Services.AddSingleton<ITicketService, ApiTicketService>();
 builder.Services.AddSingleton<IEmailService, EmailService>();
 //builder.Services.AddSingleton(sp => RabbitMQFactory.CreateBus(BusType.LocalHost));
 
-// Logger
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(Configuration)
-    .WriteTo.OpenTelemetry(options =>
-    {
-        options.Endpoint = $"{Configuration.GetValue<string>("Otlp:Endpoint")}/v1/logs";
-        options.Protocol = Serilog.Sinks.OpenTelemetry.OtlpProtocol.Grpc;
-        options.ResourceAttributes = new Dictionary<string, object>
+//// Logger
+//Log.Logger = new LoggerConfiguration()
+//    .ReadFrom.Configuration(Configuration)
+//    .WriteTo.OpenTelemetry(options =>
+//    {
+//        options.Endpoint = $"{Configuration.GetValue<string>("Otlp:Endpoint")}/v1/logs";
+//        options.Protocol = Serilog.Sinks.OpenTelemetry.OtlpProtocol.Grpc;
+//        options.ResourceAttributes = new Dictionary<string, object>
+//        {
+//            ["service.name"] = Configuration.GetValue<string>("Otlp:ServiceName")
+//        };
+//    })
+//    .CreateLogger();
+
+//// Tracing
+//Action<ResourceBuilder> appResourceBuilder =
+//    resource => resource
+//        .AddTelemetrySdk()
+//        .AddService(Configuration.GetValue<string>("Otlp:ServiceName"));
+
+//builder.Services.AddOpenTelemetry()
+//    .ConfigureResource(appResourceBuilder)
+//    .WithTracing(builder => builder
+//        .AddAspNetCoreInstrumentation()
+//        .AddHttpClientInstrumentation()
+//        .AddSource("APITracing")
+//        //.AddConsoleExporter()
+//        .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"))
+//    )
+//    .WithMetrics(builder => builder
+//        .AddRuntimeInstrumentation()
+//        .AddAspNetCoreInstrumentation()
+//        .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317")));
+
+builder.Logging.AddOpenTelemetry(options =>
+{
+    options
+        .SetResourceBuilder(
+            ResourceBuilder.CreateDefault()
+                .AddService("ticketsrus"))
+        .AddOtlpExporter(o =>
         {
-            ["service.name"] = Configuration.GetValue<string>("Otlp:ServiceName")
-        };
-    })
-    .CreateLogger();
-
-// Tracing
-Action<ResourceBuilder> appResourceBuilder =
-    resource => resource
-        .AddTelemetrySdk()
-        .AddService(Configuration.GetValue<string>("Otlp:ServiceName"));
-
-builder.Services.AddOpenTelemetry()
-    .ConfigureResource(appResourceBuilder)
-    .WithTracing(builder => builder
-        .AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
-        .AddSource("APITracing")
-        //.AddConsoleExporter()
-        .AddOtlpExporter(options => options.Endpoint = new Uri(Configuration.GetValue<string>("Otlp:Endpoint")))
-    )
-    .WithMetrics(builder => builder
-        .AddRuntimeInstrumentation()
-        .AddAspNetCoreInstrumentation()
-        .AddOtlpExporter(options => options.Endpoint = new Uri(Configuration.GetValue<string>("Otlp:Endpoint"))));
+            o.Endpoint = new Uri("http://otel-collector:4317/");
+        })
+        .AddConsoleExporter();
+});
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
