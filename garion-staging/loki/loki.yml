@@ -2,7 +2,9 @@ auth_enabled: false
 
 server:
   http_listen_port: 3100
-  # grpc_listen_port: 9096
+  grpc_listen_port: 9096    # Default
+
+
 
 common:
   path_prefix: /loki
@@ -21,10 +23,10 @@ schema_config:
     - from: 2020-10-24
       store: boltdb-shipper
       object_store: filesystem
-      schema: v11
+      schema: v12
       index:
         prefix: index_
         period: 24h
 
 # ruler:
-#   alertmanager_url: http://localhost:9093
+#   alertmanager_url: http://localhost:9093 

@@ -1,20 +1,18 @@
 receivers:
   otlp:
     protocols:
-      grpc:
       http:
+      grpc:
 
 exporters:
   prometheus:
     endpoint: otel:8889
   otlp:
     endpoint: tempo:4007
-    tls:
-      insecure: true
+    # tls:
+    #   insecure: true
   loki:
     endpoint: http://loki:3100/loki/api/v1/push
-    tls:
-      insecure: true
 
 extensions:
   health_check:
@@ -26,7 +24,7 @@ processors:
   batch:
 
 service:
-  extensions: [zpages, health_check]  # Enable zpages
+  extensions: [health_check]
   pipelines:
     metrics:
       receivers: [otlp]

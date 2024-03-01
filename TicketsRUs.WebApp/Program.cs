@@ -10,6 +10,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Logs;
+using OpenTelemetry.Exporter;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager Configuration = builder.Configuration;
@@ -21,6 +22,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddControllers();
 builder.Services.AddSingleton<ITicketService, ApiTicketService>();
 builder.Services.AddSingleton<IEmailService, EmailService>();
+builder.Services.AddHealthChecks();
+builder.Services.AddLogging();
 //builder.Services.AddSingleton(sp => RabbitMQFactory.CreateBus(BusType.LocalHost));
 
 //// Logger
@@ -57,15 +60,18 @@ builder.Services.AddSingleton<IEmailService, EmailService>();
 //        .AddAspNetCoreInstrumentation()
 //        .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317")));
 
+const string serviceName = "tickets";
+
 builder.Logging.AddOpenTelemetry(options =>
 {
     options
         .SetResourceBuilder(
             ResourceBuilder.CreateDefault()
-                .AddService("ticketsrus"))
-        .AddOtlpExporter(o =>
-        {
+                .AddService(serviceName))
+        .AddOtlpExporter(o => 
+        { 
             o.Endpoint = new Uri("http://otel-collector:4317/");
+            o.Protocol = OtlpExportProtocol.Grpc;
         })
         .AddConsoleExporter();
 });
@@ -75,7 +81,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Health Check
-builder.Services.AddHealthChecks();
 
 builder.Services.AddDbContextFactory<PostgresContext>(options => options.UseNpgsql("Name=db"));
 var app = builder.Build();
