@@ -6,7 +6,7 @@ receivers:
 
 exporters:
   prometheus:
-    endpoint: otel:8889
+    endpoint: otel-collector:8889
   # otlp:
   #   endpoint: tempo:4007
     # tls:
@@ -14,10 +14,11 @@ exporters:
   loki:
     endpoint: http://loki:3100/loki/api/v1/push
 
+
 extensions:
   health_check:
   zpages:
-     endpoint: otel:55679
+     endpoint: otel-collector:55679
 
 processors:
   # Data sources: traces, metrics, logs
