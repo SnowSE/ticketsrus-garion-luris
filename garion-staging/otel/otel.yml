@@ -7,8 +7,8 @@ receivers:
 exporters:
   prometheus:
     endpoint: otel:8889
-  otlp:
-    endpoint: tempo:4007
+  # otlp:
+  #   endpoint: tempo:4007
     # tls:
     #   insecure: true
   loki:
@@ -24,15 +24,15 @@ processors:
   batch:
 
 service:
-  extensions: [health_check]
+  extensions: [zpages, health_check]
   pipelines:
-    metrics:
-      receivers: [otlp]
-      exporters: [prometheus]
-    traces:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [otlp]
+    # metrics:
+    #   receivers: [otlp]
+    #   exporters: [prometheus]
+    # traces:
+    #   receivers: [otlp]
+    #   processors: [batch]
+    #   exporters: [otlp]
     logs:
       receivers: [otlp]
       processors: [batch]

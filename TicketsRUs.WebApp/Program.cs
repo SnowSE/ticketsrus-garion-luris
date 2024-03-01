@@ -21,6 +21,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddControllers();
 builder.Services.AddSingleton<ITicketService, ApiTicketService>();
 builder.Services.AddSingleton<IEmailService, EmailService>();
+
 builder.Services.AddHealthChecks();
 builder.Services.AddLogging();
 
@@ -32,13 +33,13 @@ builder.Logging.AddOpenTelemetry(options =>
         .SetResourceBuilder(
             ResourceBuilder.CreateDefault()
                 .AddService(serviceName))
-        .AddOtlpExporter(o => 
-        { 
+        .AddOtlpExporter(o =>
+        {
             o.Endpoint = new Uri("http://otel-collector:4317/");
-            o.Protocol = OtlpExportProtocol.Grpc;
         })
         .AddConsoleExporter();
 });
+
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
