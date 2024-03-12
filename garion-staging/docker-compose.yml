@@ -8,22 +8,18 @@ services:
       POSTGRES_USER: postgres
     volumes:
       - ../20240216.05.07.07.sql:/docker-entrypoint-initdb.d/a.sql
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    networks:
+      otel:
 
   garion-ticketsrus-web:
     build: ..
-    depends_on:
-      gariondb:
-        condition: service_healthy
     ports:
       - 8086:8080
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "db=server=gariondb;user id=postgres;database=postgres;password=password;"
+    networks:
+      otel:
       
   blackbox:
     # https://github.com/prometheus/blackbox_exporter/releases
@@ -33,7 +29,6 @@ services:
     ports:
       - 9115:9115
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ./blackbox/blackbox.yml:/etc/blackbox/blackbox.yml
     command: --config.file=/etc/blackbox/blackbox.yml
     networks:
@@ -48,60 +43,36 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus:/prometheus
     depends_on:
       - blackbox
     networks:
       otel:
 
-  tempo:
-    # https://github.com/grafana/tempo/releases
-    image: grafana/tempo:2.0.1
-    container_name: tempo
-    command: [ "-config.file=/etc/tempo.yaml" ]
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ./tempo/tempo.yml:/etc/tempo.yaml
-      - tempo:/tmp/tempo
-    restart: unless-stopped
-    ports:
-      - 3200:3200  # tempo
-      - 4007:4317  # otlp grpc
-    depends_on:
-      - otel-collector
-    networks:
-      otel:
-      
   loki:
-    # https://github.com/grafana/loki/releases
-    image: grafana/loki:2.8.0
+    image: grafana/loki:2.9.0
     container_name: loki
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
-      - /etc/localtime:/etc/localtime:ro      
       - ./loki/loki.yml:/etc/loki/local-config.yaml
-      - loki:/data/loki
-    restart: unless-stopped
     ports:
-      - 3100:3100
+      - "3100:3100"
     networks:
       otel:
       
   otel-collector:
     # https://github.com/open-telemetry/opentelemetry-collector-contrib/releases
-    container_name: otel
-    hostname: otel
-    image: otel/opentelemetry-collector-contrib:0.75.0
+    # container_name: otel
+    # hostname: otel
+    image: otel/opentelemetry-collector-contrib
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
       - ./otel/otel.yml:/etc/otel-collector-config.yaml
-    restart: unless-stopped
     ports:
       - 8888:8888   # Prometheus metrics exposed by the collector
       - 8889:8889   # Prometheus exporter metrics
-      - 4317:4317   # OTLP gRPC receiver                        ########### Cannot edit this value to listen for API?
+      - 4317:4317   # OTLP gRPC receiver
+      - 4318:4318   # OTLP http receiver 
       - 9200:55679  # zpages
       - 13133:13133 # Health check
     networks:
@@ -111,7 +82,6 @@ services:
     # https://github.com/grafana/grafana/releases
     image: grafana/grafana:9.4.7
     container_name: grafana
-    #command:
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
@@ -125,19 +95,7 @@ services:
       - 3000:3000
     depends_on:
       - prometheus
-      - tempo
       - loki      
-    networks:
-      otel:
-
-  rabbitmq:
-    # https://github.com/docker-library/rabbitmq
-    image: rabbitmq:3.11.0-management-alpine
-    container_name: rabbitmq
-    restart: unless-stopped
-    ports:
-      - 5672:5672
-      - 15672:15672
     networks:
       otel:
 
@@ -145,7 +103,6 @@ networks:
   otel:
 
 volumes:
+  grafana-data:
   loki:
   prometheus:
-  tempo:
-  grafana-data:

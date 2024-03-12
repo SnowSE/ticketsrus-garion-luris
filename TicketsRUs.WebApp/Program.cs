@@ -5,11 +5,11 @@ using TicketsRUs.WebApp.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Serilog;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Logs;
+using OpenTelemetry.Exporter;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager Configuration = builder.Configuration;
@@ -21,48 +21,18 @@ builder.Services.AddRazorComponents()
 builder.Services.AddControllers();
 builder.Services.AddSingleton<ITicketService, ApiTicketService>();
 builder.Services.AddSingleton<IEmailService, EmailService>();
-//builder.Services.AddSingleton(sp => RabbitMQFactory.CreateBus(BusType.LocalHost));
 
-//// Logger
-//Log.Logger = new LoggerConfiguration()
-//    .ReadFrom.Configuration(Configuration)
-//    .WriteTo.OpenTelemetry(options =>
-//    {
-//        options.Endpoint = $"{Configuration.GetValue<string>("Otlp:Endpoint")}/v1/logs";
-//        options.Protocol = Serilog.Sinks.OpenTelemetry.OtlpProtocol.Grpc;
-//        options.ResourceAttributes = new Dictionary<string, object>
-//        {
-//            ["service.name"] = Configuration.GetValue<string>("Otlp:ServiceName")
-//        };
-//    })
-//    .CreateLogger();
+builder.Services.AddHealthChecks();
+builder.Services.AddLogging();
 
-//// Tracing
-//Action<ResourceBuilder> appResourceBuilder =
-//    resource => resource
-//        .AddTelemetrySdk()
-//        .AddService(Configuration.GetValue<string>("Otlp:ServiceName"));
-
-//builder.Services.AddOpenTelemetry()
-//    .ConfigureResource(appResourceBuilder)
-//    .WithTracing(builder => builder
-//        .AddAspNetCoreInstrumentation()
-//        .AddHttpClientInstrumentation()
-//        .AddSource("APITracing")
-//        //.AddConsoleExporter()
-//        .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"))
-//    )
-//    .WithMetrics(builder => builder
-//        .AddRuntimeInstrumentation()
-//        .AddAspNetCoreInstrumentation()
-//        .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317")));
+const string serviceName = "tickets";
 
 builder.Logging.AddOpenTelemetry(options =>
 {
     options
         .SetResourceBuilder(
             ResourceBuilder.CreateDefault()
-                .AddService("ticketsrus"))
+                .AddService(serviceName))
         .AddOtlpExporter(o =>
         {
             o.Endpoint = new Uri("http://otel-collector:4317/");
@@ -70,12 +40,12 @@ builder.Logging.AddOpenTelemetry(options =>
         .AddConsoleExporter();
 });
 
+
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Health Check
-builder.Services.AddHealthChecks();
 
 builder.Services.AddDbContextFactory<PostgresContext>(options => options.UseNpgsql("Name=db"));
 var app = builder.Build();
@@ -84,7 +54,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

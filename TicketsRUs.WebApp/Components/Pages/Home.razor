@@ -1,7 +1,15 @@
 ﻿@page "/"
+@inject ILogger<Home> log
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+@code {
+    protected override void OnInitialized()
+    {
+        log.LogInformation("logged the home page");
+    }
+}
