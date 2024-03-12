@@ -18,6 +18,7 @@ jobs:
 
     - name: Docker Down
       run: |
+          pwd
           cd ./ticketsrus-garion-luris/garion-staging 
           docker compose down -v 
     - name: Clone Repo
