@@ -45,7 +45,6 @@ jobs:
         needs: ${{ toJson(needs) }}
         job: ${{ toJson(job) }}
         steps: ${{ toJson(steps) }}
-
     - name: Microsoft Teams Notification (On Failure)
       if: failure()
       uses: skitionek/notify-microsoft-teams@master
