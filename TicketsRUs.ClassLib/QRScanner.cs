@@ -1,7 +1,7 @@
 ﻿using TicketsRUs.ClassLib.Data;
 using TicketsRUs.ClassLib.Services;
 
-namespace TicketsRUs.Maui.Components;
+namespace TicketsRUs.ClassLib;
 
 public class QRScanner
 {
@@ -9,12 +9,6 @@ public class QRScanner
     public bool SuccessfulScan { get; private set; } = false;
     private ITicketService service;
     ICameraController cameraController;
-
-    public QRScanner(ITicketService service)
-    {
-        this.service = service;
-        cameraController = new CameraController();
-    }
 
     public QRScanner(ITicketService service, ICameraController c)
     {
@@ -46,23 +40,4 @@ public class QRScanner
     {
         return await cameraController.GetScanResultsAsync();
     }
-}
-
-public class CameraController() : ICameraController
-{
-    public async Task<string> GetScanResultsAsync()
-    {
-        var cameraPage = new CameraPage();
-
-        await Application.Current.MainPage.Navigation.PushModalAsync(cameraPage);
-        var results = await cameraPage.WaitForResultAsync();
-        await Application.Current.MainPage.Navigation.PopModalAsync();
-
-        return results.Value;
-    }
-}
-
-public interface ICameraController
-{
-    Task<string> GetScanResultsAsync();
 }

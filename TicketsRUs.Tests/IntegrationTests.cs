@@ -1,10 +1,7 @@
 ﻿using Moq;
 
-using TicketsRUs.WebApp;
 using TicketsRUs.ClassLib.Data;
-using TicketsRUs.Maui.Components;
 using TicketsRUs.ClassLib.Services;
-using TicketsRUs.Maui.Services;
 
 namespace TicketsRUs.Tests;
 
