@@ -2,6 +2,7 @@ name: Garion Runner
 on: [push]
 jobs:
 
+# pwd /home/garion/actions-runner/_work/ticketsrus-garion-luris/ticketsrus-garion-luris
 
   Pipeline:
     runs-on: garion-ticket-runner
@@ -18,18 +19,20 @@ jobs:
 
     - name: Docker Down
       run: |
-          pwd
-          cd ./ticketsrus-garion-luris/garion-staging 
+          pwd # /home/garion/actions-runner/_work/ticketsrus-garion-luris/ticketsrus-garion-luris
+          cd ./garion-staging 
+          pwd # /home/garion/actions-runner/_work/ticketsrus-garion-luris/ticketsrus-garion-luris/garion-staging 
           docker compose down -v 
     - name: Clone Repo
       run: |
-        pwd
-        rm -rf ./ticketsrus-garion-luris || true 
+        pwd # /home/garion/actions-runner/_work/ticketsrus-garion-luris/ticketsrus-garion-luris
+        cd .. #/home/garion/actions-runner/_work/ticketsrus-garion-luris/
+        rm -rf /ticketsrus-garion-luris || true 
         git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
     - name: Run Docker Compose
       run: |
-        pwd
-        cd ./ticketsrus-garion-luris/garion-staging 
+        pwd # /home/garion/actions-runner/_work/ticketsrus-garion-luris/ticketsrus-garion-luris
+        cd ./garion-staging 
         docker compose up --build -d
 
     - uses: actions/checkout@master
