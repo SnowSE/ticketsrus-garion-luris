@@ -44,7 +44,7 @@ SET default_table_access_method = heap;
 CREATE TABLE public.available_event (
     id integer NOT NULL,
     start_time timestamp without time zone,
-    name character varying(50)
+    name character varying(~)
 );
 
 

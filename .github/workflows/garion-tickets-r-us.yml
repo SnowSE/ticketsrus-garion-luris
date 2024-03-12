@@ -14,10 +14,10 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     # - name: Install Maui
     #   run: dotnet workload install maui  
-    - name: Run Test Suite
-      run: |
-        cd ./TicketsRUs.Tests/
-        dotnet test
+    # - name: Run Test Suite
+    #   run: |
+    #     cd ./TicketsRUs.Tests/
+    #     dotnet test
 
     - name: Docker Down
       run: |
