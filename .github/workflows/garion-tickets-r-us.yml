@@ -11,10 +11,10 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-    - name: Install Maui
-      run: dotnet workload install maui  
+    # - name: Install Maui
+    #   run: dotnet workload install maui  
     # - name: Run Test Suite
-      # run: dotnet test "TicketsRUs.Tests"
+    #   run: dotnet test "TicketsRUs.Tests"
 
     - name: Docker Down
       run: |
