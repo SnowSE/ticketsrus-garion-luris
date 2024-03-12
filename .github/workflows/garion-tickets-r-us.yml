@@ -27,7 +27,7 @@ jobs:
       run: |
         pwd # /home/garion/actions-runner/_work/ticketsrus-garion-luris/ticketsrus-garion-luris
         cd .. #/home/garion/actions-runner/_work/ticketsrus-garion-luris/
-        rm -rf /ticketsrus-garion-luris || true 
+        rm -rf ./ticketsrus-garion-luris || true 
         git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
     - name: Run Docker Compose
       run: |
