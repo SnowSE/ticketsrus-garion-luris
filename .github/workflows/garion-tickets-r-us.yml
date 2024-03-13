@@ -36,6 +36,7 @@ jobs:
         cd ./garion-staging 
         docker compose up --build -d
 
+
     - uses: actions/checkout@master
     - name: Microsoft Teams Notification
       if: success()
