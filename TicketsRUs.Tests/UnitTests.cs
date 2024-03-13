@@ -11,7 +11,7 @@ public class UnitTests
     [Fact]
     public void EnvironmentSetUp()
     {
-        Assert.True(true);
+        Assert.False(true);
     }
 
     [Fact]
