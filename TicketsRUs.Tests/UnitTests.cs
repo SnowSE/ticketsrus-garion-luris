@@ -15,6 +15,12 @@ public class UnitTests
     }
 
     [Fact]
+    public void EnvironmentSetUp2()
+    {
+        Assert.True(true);
+    }
+
+    [Fact]
     public async void SuccessfulScan_UpdatesDatabase()
     {
         //ARRANGE
