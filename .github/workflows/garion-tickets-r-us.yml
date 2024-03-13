@@ -2,36 +2,55 @@ name: Garion Runner
 on: [push]
 jobs:
 
-  # test:
-  #   runs-on: garion-ticket-runner
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - name: Setup .NET SDK
-  #     uses: actions/setup-dotnet@v3
-  #     with:
-  #       dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-  #   - name: Test
-  #     run: dotnet test "TicketsRUs.Tests"
+# pwd /home/garion/actions-runner/_work/ticketsrus-garion-luris/ticketsrus-garion-luris
 
-  Deploy:
+  Pipeline:
     runs-on: garion-ticket-runner
     steps:
-      - name: "Docker Down"
-        run: cd garion-staging && docker compose down -v 
-      - name: "Clone repo"
-        run: cd ../ && rm -rf ticketsrus-garion-luris || true && git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
-      - name: "Run docker compose"
-        run: cd garion-staging && docker compose up --build -d
+    - uses: actions/checkout@v4
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    # - name: Install Maui
+    #   run: dotnet workload install maui  
+    - name: Run Test Suite
+      run: |
+        cd ./TicketsRUs.Tests/
+        dotnet test
 
-  Notify:
-    runs-on: garion-ticket-runner
-    steps:
-      - uses: actions/checkout@master
-      - name: Microsoft Teams Notification
-        uses: skitionek/notify-microsoft-teams@master
-        if: always()
-        with:
-          webhook_url: ${{ secrets.GARION_WEBHOOK }}
-          needs: ${{ toJson(needs) }}
-          job: ${{ toJson(job) }}
-          steps: ${{ toJson(steps) }}
+    - name: Docker Down
+      run: |
+          cd ./garion-staging 
+          docker compose down -v 
+    - name: Clone Repo
+      run: |
+        cd ..
+        rm -rf ./ticketsrus-garion-luris || true 
+        git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
+    - name: Lint 
+      run: |
+        dotnet format --verify-no-changes --severity warn
+    - name: Docker Up
+      run: |
+        cd ./garion-staging 
+        docker compose up --build -d
+
+    - uses: actions/checkout@master
+    - name: Microsoft Teams Notification
+      if: success()
+      uses: skitionek/notify-microsoft-teams@master
+      with:
+        webhook_url: ${{ secrets.GARION_WEBHOOK }}
+        needs: ${{ toJson(needs) }}
+        job: ${{ toJson(job) }}
+        steps: ${{ toJson(steps) }}
+    - name: Microsoft Teams Notification (On Failure)
+      if: failure()
+      uses: skitionek/notify-microsoft-teams@master
+      with:
+        webhook_url: ${{ secrets.GARION_WEBHOOK }}
+        needs: ${{ toJson(needs) }}
+        job: ${{ toJson(job) }}
+        steps: ${{ toJson(steps) }}
+        overwrite: "{title: `Runner failed! ${workflow_link}`}"

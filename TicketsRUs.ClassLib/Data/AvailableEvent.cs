@@ -1,4 +1,5 @@
 ﻿using SQLite;
+
 using SQLiteNetExtensions.Attributes;
 
 namespace TicketsRUs.ClassLib.Data;
