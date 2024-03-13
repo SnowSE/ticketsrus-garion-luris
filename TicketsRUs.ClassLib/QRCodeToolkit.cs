@@ -1,10 +1,13 @@
-﻿using QRCoder;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
+
+using QRCoder;
 namespace TicketsRUs.ClassLib;
+
+#pragma warning disable CA1416
 
 public static class QRCodeToolkit
 {
@@ -28,3 +31,5 @@ public static class QRCodeToolkit
         return result;
     }
 }
+
+#pragma warning restore CA1416

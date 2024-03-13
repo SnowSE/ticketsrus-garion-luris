@@ -1,7 +1,9 @@
-﻿using MimeKit;
-using TicketsRUs.ClassLib.Services;
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
+
+using MimeKit;
 using MimeKit.Utils;
+
+using TicketsRUs.ClassLib.Services;
 
 namespace TicketsRUs.WebApp.Services;
 

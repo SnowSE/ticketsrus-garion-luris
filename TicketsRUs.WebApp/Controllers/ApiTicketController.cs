@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+
 using TicketsRUs.ClassLib.Data;
 using TicketsRUs.ClassLib.Services;
 
@@ -8,7 +9,7 @@ namespace TicketsRUs.ClassLib.Controllers;
 [ApiController]
 public class ApiTicketController : ControllerBase
 {
-    ITicketService _service;
+    readonly ITicketService _service;
     public ApiTicketController(ITicketService service)
     {
         _service = service;
