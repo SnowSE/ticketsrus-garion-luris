@@ -20,10 +20,10 @@ public class UnitTests
         //ARRANGE
         Ticket t = new Ticket()
         {
-            Id = 0,
-            EventId = 0,
-            Scanned = false,
-            Identifier = "123456789"
+                    Id = 0,
+                    EventId = 0,
+                    Scanned = false,
+                    Identifier = "123456789"
         };
 
         Mock<ITicketService> mockService = new();
