@@ -30,7 +30,7 @@ jobs:
         git clone https://${{ secrets.GARION_CLONE_KEY }}@github.com/SnowSE/ticketsrus-garion-luris.git
     - name: Lint 
       run: |
-        dotnet format --verify-no-changes --severity warn
+        dotnet format --verify-no-changess
     - name: Docker Up
       run: |
         cd ./garion-staging 
