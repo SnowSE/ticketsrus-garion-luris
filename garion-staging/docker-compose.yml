@@ -8,8 +8,8 @@ services:
       POSTGRES_USER: postgres
     volumes:
       - ../20240216.05.07.07.sql:/docker-entrypoint-initdb.d/a.sql
-    networks:
-      otel:
+    # networks:
+    #   otel:
 
   garion-ticketsrus-web:
     build: ..
@@ -18,8 +18,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "db=server=gariondb;user id=postgres;database=postgres;password=password;"
-    networks:
-      otel:
+    # networks:
+    #   otel:
       
 #   blackbox:
 #     # https://github.com/prometheus/blackbox_exporter/releases

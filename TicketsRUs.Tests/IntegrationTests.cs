@@ -1,7 +1,9 @@
 ﻿using Moq;
-
+using System.Net.Http.Json;
+using TicketsRUs.ClassLib;
 using TicketsRUs.ClassLib.Data;
 using TicketsRUs.ClassLib.Services;
+using TicketsRUs.WebApp.Services;
 
 namespace TicketsRUs.Tests;
 
