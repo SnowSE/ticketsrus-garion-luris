@@ -11,6 +11,8 @@ using TicketsRUs.ClassLib.Data;
 using TicketsRUs.ClassLib.Services;
 using TicketsRUs.WebApp.Components;
 using TicketsRUs.WebApp.Services;
+using TicketsRUs.WebApp.Telemetry.Traces;
+using TicketsRUs.WebApp.Telemetry.Metrics;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager Configuration = builder.Configuration;
@@ -30,26 +32,33 @@ const string serviceName = "tickets";
 const string serviceVersion = "1.0.0";
 
 builder.Services.AddOpenTelemetry()
+.ConfigureResource(resource => resource.AddService(serviceName: serviceName, serviceVersion: serviceVersion))
 .WithMetrics(metrics =>
 {
-    metrics.AddMeter("Microsoft.AspNetCore.Hosting");
-    metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
-    metrics.AddMeter("System.Net.Http");
-    metrics.AddPrometheusExporter();
+    metrics.AddAspNetCoreInstrumentation();
+    metrics.AddMeter(Metrics.Name);
+    metrics.AddConsoleExporter();
 
-    metrics.AddOtlpExporter();
+    metrics.AddOtlpExporter(o =>
+    {
+        o.Endpoint = new Uri("http://otel-collector:4317/");
+    });
 })
 .WithTracing(b =>
 {
     b
     .AddSource(serviceName)
-    .ConfigureResource(resource =>
-        resource.AddService(
-            serviceName: serviceName,
-            serviceVersion: serviceVersion))
+    .AddSource(Traces.Name)
     .AddAspNetCoreInstrumentation()
     .AddConsoleExporter()
-    .AddOtlpExporter();
+    .AddOtlpExporter(o =>
+    {
+        o.Endpoint = new Uri("http://otel-collector:4317/");
+    })
+    .AddZipkinExporter(o =>
+    {
+        o.Endpoint = new Uri("http://zipkin:9411/");
+    });
 });
 
 builder.Logging.AddOpenTelemetry(options =>
@@ -61,8 +70,8 @@ builder.Logging.AddOpenTelemetry(options =>
         .AddOtlpExporter(o =>
         {
             o.Endpoint = new Uri("http://otel-collector:4317/");
-        })
-        .AddConsoleExporter();
+        });
+        //.AddConsoleExporter();
 });
 
 // Swagger
@@ -105,7 +114,7 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.MapPrometheusScrapingEndpoint();
+//app.MapPrometheusScrapingEndpoint();
 
 app.Run();
 

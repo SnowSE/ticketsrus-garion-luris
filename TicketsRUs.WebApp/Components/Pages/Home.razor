@@ -1,4 +1,7 @@
 ﻿@page "/"
+@using System.Diagnostics
+@using TicketsRUs.WebApp.Telemetry.Traces
+@using TicketsRUs.WebApp.Telemetry.Metrics
 @inject ILogger<Home> log
 
 <PageTitle>Home</PageTitle>
@@ -7,9 +10,25 @@
 
 Welcome to your new app.
 
+@if (loaded)
+{
+    <p class="bg-success">Loaded</p>
+}
+else
+{
+    <p class="bg-danger">Waiting...</p>
+}
+
 @code {
-    protected override void OnInitialized()
+    bool loaded = false;
+
+    protected override async void OnInitialized()
     {
         log.LogInformation("logged the home page");
+
+        using var myActivity = Traces.MyTrace.StartActivity("SayHello");
+        Metrics.countGreetings.Add(3);
+
+        loaded = true;
     }
 }

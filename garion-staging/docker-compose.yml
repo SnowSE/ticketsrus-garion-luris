@@ -43,7 +43,7 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     depends_on:
       - blackbox
     networks:
@@ -99,6 +99,17 @@ services:
     networks:
       otel:
 
+  zipkin:
+    image: ghcr.io/openzipkin/zipkin:${TAG:-latest}
+    container_name: zipkin
+    # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
+    environment:
+      - STORAGE_TYPE=mem
+    ports:
+      - 9411:9411
+    networks:
+      otel:
+
 networks:
   otel:
 
@@ -106,3 +117,4 @@ volumes:
   grafana-data:
   loki:
   prometheus:
+  zipkin:  
