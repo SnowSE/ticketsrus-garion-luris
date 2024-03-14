@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -28,6 +27,30 @@ builder.Services.AddHealthChecks();
 builder.Services.AddLogging();
 
 const string serviceName = "tickets";
+const string serviceVersion = "1.0.0";
+
+builder.Services.AddOpenTelemetry()
+.WithMetrics(metrics =>
+{
+    metrics.AddMeter("Microsoft.AspNetCore.Hosting");
+    metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
+    metrics.AddMeter("System.Net.Http");
+    metrics.AddPrometheusExporter();
+
+    metrics.AddOtlpExporter();
+})
+.WithTracing(b =>
+{
+    b
+    .AddSource(serviceName)
+    .ConfigureResource(resource =>
+        resource.AddService(
+            serviceName: serviceName,
+            serviceVersion: serviceVersion))
+    .AddAspNetCoreInstrumentation()
+    .AddConsoleExporter()
+    .AddOtlpExporter();
+});
 
 builder.Logging.AddOpenTelemetry(options =>
 {
@@ -41,7 +64,6 @@ builder.Logging.AddOpenTelemetry(options =>
         })
         .AddConsoleExporter();
 });
-
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -82,6 +104,8 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.MapPrometheusScrapingEndpoint();
 
 app.Run();
 
