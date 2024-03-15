@@ -21,45 +21,19 @@ ConfigurationManager Configuration = builder.Configuration;
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddControllers();
+builder.Services.AddDbContextFactory<PostgresContext>(options => options.UseNpgsql("Name=db"));
 builder.Services.AddSingleton<ITicketService, ApiTicketService>();
 builder.Services.AddSingleton<IEmailService, EmailService>();
-
 builder.Services.AddHealthChecks();
 builder.Services.AddLogging();
 
 const string serviceName = "tickets";
 const string serviceVersion = "1.0.0";
-
-builder.Services.AddOpenTelemetry()
-.ConfigureResource(resource => resource.AddService(serviceName: serviceName, serviceVersion: serviceVersion))
-.WithMetrics(metrics =>
-{
-    metrics.AddAspNetCoreInstrumentation();
-    metrics.AddMeter(Metrics.Name);
-    metrics.AddConsoleExporter();
-
-    metrics.AddOtlpExporter(o =>
-    {
-        o.Endpoint = new Uri("http://otel-collector:4317/");
-    });
-})
-.WithTracing(b =>
-{
-    b
-    .AddSource(serviceName)
-    .AddSource(Traces.Name)
-    .AddAspNetCoreInstrumentation()
-    .AddConsoleExporter()
-    .AddOtlpExporter(o =>
-    {
-        o.Endpoint = new Uri("http://otel-collector:4317/");
-    })
-    .AddZipkinExporter(o =>
-    {
-        o.Endpoint = new Uri("http://zipkin:9411/");
-    });
-});
 
 builder.Logging.AddOpenTelemetry(options =>
 {
@@ -68,19 +42,29 @@ builder.Logging.AddOpenTelemetry(options =>
             ResourceBuilder.CreateDefault()
                 .AddService(serviceName))
         .AddOtlpExporter(o =>
-        {
-            o.Endpoint = new Uri("http://otel-collector:4317/");
-        });
-        //.AddConsoleExporter();
+            o.Endpoint = new Uri("http://otel-collector:4317/"));
+    //.AddConsoleExporter();
 });
 
-// Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resource => resource.AddService("FirstTrace"))
+    .WithTracing(tracing => tracing
+        .AddSource(serviceName)
+        .AddSource(Traces.Name)
+         .AddSource(Traces.Name2)
+        .AddAspNetCoreInstrumentation()
+        //.AddConsoleExporter()
+        .AddOtlpExporter(o =>
+            o.Endpoint = new Uri("http://otel-collector:4317/")))
+    .WithMetrics(metrics => metrics
+        .AddAspNetCoreInstrumentation()
+        .AddMeter(Metrics.Name)
+        .AddConsoleExporter()
+        .AddOtlpExporter(o =>
+            o.Endpoint = new Uri("http://otel-collector:4317/")));
 
-// Health Check
 
-builder.Services.AddDbContextFactory<PostgresContext>(options => options.UseNpgsql("Name=db"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -113,8 +97,6 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
-
-//app.MapPrometheusScrapingEndpoint();
 
 app.Run();
 

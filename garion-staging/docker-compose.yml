@@ -77,6 +77,8 @@ services:
       - 13133:13133 # Health check
     networks:
       otel:
+    depends_on:
+    - zipkin
 
   grafana:
     # https://github.com/grafana/grafana/releases
@@ -100,7 +102,7 @@ services:
       otel:
 
   zipkin:
-    image: ghcr.io/openzipkin/zipkin:${TAG:-latest}
+    image: ghcr.io/openzipkin/zipkin-slim:${TAG:-latest}
     container_name: zipkin
     # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
     environment:

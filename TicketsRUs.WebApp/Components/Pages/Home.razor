@@ -26,8 +26,9 @@ else
     {
         log.LogInformation("logged the home page");
 
-        using var myActivity = Traces.MyTrace.StartActivity("SayHello");
         Metrics.countGreetings.Add(3);
+        using var myActivity = Traces.MyTrace.StartActivity("MyTrace");
+        using var myActivity2 = Traces.MyTrace2.StartActivity("MyTrace2");
 
         loaded = true;
     }
